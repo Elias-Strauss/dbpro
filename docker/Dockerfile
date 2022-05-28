@@ -20,3 +20,4 @@ RUN 	cd gp-xerces && mkdir build && cd build && ../configure --prefix=/usr/local
 RUN 	cd gporca && \
 	cmake -GNinja -H. -Bbuild && \
 	ninja install -C build
+RUN apt install gradle
