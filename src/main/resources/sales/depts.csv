@@ -1,0 +1,4 @@
+regionkey:int,deptno:int,name:string
+1,10,"Sales"
+1,20,"Marketing"
+2,30,"Accounts"

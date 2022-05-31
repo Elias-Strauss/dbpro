@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "defaultSchema": "combined",
+  "schemas": [
+    {
+      "name": "sales-csv",
+      "type": "custom",
+      "factory": "org.apache.calcite.adapter.csv.CsvSchemaFactory",
+      "operand": {
+        "directory": "sales"
+      }
+    },
+    {
+      "type": "jdbc",
+      "name": "tpch-jdbc",
+      "jdbcUser": "postgres",
+      "jdbcPassword": "123456",
+      "jdbcUrl": "jdbc:postgresql://localhost/testing"
+    },
+    {
+      "name": "combined",
+      "tables": [
+        {
+          "name": "depts",
+          "type": "view",
+          "sql": "SELECT * from \"sales-csv\".\"depts\""
+        },
+        {
+          "name": "nation",
+          "type": "view",
+          "sql": "SELECT * from \"tpch-jdbc\".\"nation\""
+        }
+        ]
+    }
+
+  ]
+}
