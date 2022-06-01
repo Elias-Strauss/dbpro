@@ -1,0 +1,31 @@
+INNER JOIN:
+
+    <dxl:LogicalJoin JoinType="Inner">
+        <dxl:A>
+        </dxl:A>
+
+        <dxl:B>
+        </dxl:B>
+
+        <dxl:Comparison ComparisonOperator=OPERATOR OperatorMdid=ID>
+        </dxl:Comparison>
+
+-> A            = LogicalGet, LogicalJoin JoinType="Inner", LogicalSelect
+-> B            = LogicalGet, LogicalJoin JoinType="Inner", LogicalSelect
+-> OPERATOR     = "="
+-> ID           = "0.96.1.0", "0.98.1.0"                                        -> GUESS: depends on data type of the values, 96: INT-INT, 98: STR-STR
+
+FROM:
+
+              <dxl:LogicalGet>
+                <dxl:TableDescriptor Mdid="0.57464.1.0" TableName="TABLE_NAME">
+                  <dxl:Columns>
+                    <dxl:Column ColId="1" Attno="1" ColName="COL_NAME" TypeMdid="0.23.1.0" ColWidth="4"/>
+                    <dxl:Column ColId="2" Attno="-1" ColName="ctid" TypeMdid="0.27.1.0" ColWidth="6"/>
+                    <dxl:Column ColId="3" Attno="-7" ColName="tableoid" TypeMdid="0.26.1.0" ColWidth="4"/>
+                    <dxl:Column ColId="4" Attno="-8" ColName="gp_segment_id" TypeMdid="0.23.1.0" ColWidth="4"/>
+                  </dxl:Columns>
+                </dxl:TableDescriptor>
+              </dxl:LogicalGet>
+
+-> GUESS: "ctid", "tableoid", "gp_segment_id" -> GP-specific
