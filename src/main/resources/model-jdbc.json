@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "defaultSchema": "tpch-view",
+  "schemas": [
+    {
+      "type": "jdbc",
+      "name": "tpch-jdbc",
+      "jdbcUser": "postgres",
+      "jdbcPassword": "1234",
+      "jdbcDriver": "org.postgresql.Driver",
+      "jdbcUrl": "jdbc:postgresql://localhost/testing"
+    },
+    {
+      "name": "tpch-view",
+      "tables": [
+        {
+          "name": "nationview",
+          "type": "view",
+          "sql": "SELECT * from \"tpch-jdbc\".\"nation\""
+        }
+        ]
+    }
+
+  ]
+}

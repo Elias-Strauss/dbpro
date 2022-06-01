@@ -1,0 +1,126 @@
+{
+  "SYSTEM": "POSTGRES",
+  "DATABASE_NAME": "polydb",
+  "TABLES": [
+    {
+      "SYSTEM": "POSTGRES",
+      "DATABASE_NAME": "polydb",
+      "TABLE_NAME": "sink",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "field0",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "field1",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        }
+      ]
+    },
+    {
+      "SYSTEM": "POSTGRES",
+      "DATABASE_NAME": "polydb",
+      "TABLE_NAME": "sink3",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "field0",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "field1",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "field2",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        }
+      ]
+    },
+    {
+      "SYSTEM": "POSTGRES",
+      "DATABASE_NAME": "polydb",
+      "TABLE_NAME": "partsupp_sf10",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "ps_partkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_availqty",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_supplycost",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        }
+      ]
+    },
+    {
+      "SYSTEM": "POSTGRES",
+      "DATABASE_NAME": "polydb",
+      "TABLE_NAME": "partsupp_sf1",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "ps_partkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_availqty",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_supplycost",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        }
+      ]
+    },
+    {
+      "SYSTEM": "POSTGRES",
+      "DATABASE_NAME": "polydb",
+      "TABLE_NAME": "analysis",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "userid",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "count",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        }
+      ]
+    }
+  ]
+}
