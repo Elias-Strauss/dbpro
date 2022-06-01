@@ -3,7 +3,7 @@ FROM ubuntu:latest
 LABEL image=dbpro-base-image
 
 RUN apt-get update -qq &&\
-    apt-get install -qq -y git cmake gnupg2 wget openjdk-8-jdk scala make g++ make ninja-build
+    apt-get install -qq -y git cmake gnupg2 wget openjdk-8-jdk scala make g++ make ninja-build gradle
 
 WORKDIR /dbpro
 
@@ -20,4 +20,3 @@ RUN 	cd gp-xerces && mkdir build && cd build && ../configure --prefix=/usr/local
 RUN 	cd gporca && \
 	cmake -GNinja -H. -Bbuild && \
 	ninja install -C build
-RUN apt install gradle
