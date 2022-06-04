@@ -1,0 +1,548 @@
+{
+  "SYSTEM": "HIVE",
+  "DATABASE_NAME": "default",
+  "TABLES": [
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "users",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "registration_date",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "country",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "photos",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "title",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "userId",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "photos",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": ":key",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "title",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "userId",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "views",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "details",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "orders",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "type",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "source",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "photoId",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "price",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "country",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "lineitem_sf10",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "l_partkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "l_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linenumber",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "l_quantity",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "l_extendedprice",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        },
+        {
+          "ATTRIBUTE_NAME": "l_discount",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 6
+        },
+        {
+          "ATTRIBUTE_NAME": "l_tax",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 7
+        },
+        {
+          "ATTRIBUTE_NAME": "l_returnflag",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 8
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linestatus",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 9
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 10
+        },
+        {
+          "ATTRIBUTE_NAME": "l_commitdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 11
+        },
+        {
+          "ATTRIBUTE_NAME": "l_receiptdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 12
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipinstruct",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 13
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipmode",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 14
+        },
+        {
+          "ATTRIBUTE_NAME": "l_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 15
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "lineitem_sf100",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "l_partkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "l_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linenumber",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "l_quantity",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "l_extendedprice",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        },
+        {
+          "ATTRIBUTE_NAME": "l_discount",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 6
+        },
+        {
+          "ATTRIBUTE_NAME": "l_tax",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 7
+        },
+        {
+          "ATTRIBUTE_NAME": "l_returnflag",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 8
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linestatus",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 9
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 10
+        },
+        {
+          "ATTRIBUTE_NAME": "l_commitdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 11
+        },
+        {
+          "ATTRIBUTE_NAME": "l_receiptdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 12
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipinstruct",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 13
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipmode",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 14
+        },
+        {
+          "ATTRIBUTE_NAME": "l_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 15
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "lineitem_sf1",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "l_partkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "l_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linenumber",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "l_quantity",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "l_extendedprice",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        },
+        {
+          "ATTRIBUTE_NAME": "l_discount",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 6
+        },
+        {
+          "ATTRIBUTE_NAME": "l_tax",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 7
+        },
+        {
+          "ATTRIBUTE_NAME": "l_returnflag",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 8
+        },
+        {
+          "ATTRIBUTE_NAME": "l_linestatus",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 9
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 10
+        },
+        {
+          "ATTRIBUTE_NAME": "l_commitdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 11
+        },
+        {
+          "ATTRIBUTE_NAME": "l_receiptdate",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 12
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipinstruct",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 13
+        },
+        {
+          "ATTRIBUTE_NAME": "l_shipmode",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 14
+        },
+        {
+          "ATTRIBUTE_NAME": "l_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 15
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "partsupp_sf10",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_availqty",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_supplycost",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "partsupp_sf1",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_suppkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_availqty",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_supplycost",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "ps_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "part_sf1",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "p_name",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "p_mfgr",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "p_brand",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "p_type",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "p_size",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        },
+        {
+          "ATTRIBUTE_NAME": "p_container",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 6
+        },
+        {
+          "ATTRIBUTE_NAME": "p_retailprice",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 7
+        },
+        {
+          "ATTRIBUTE_NAME": "p_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 8
+        }
+      ]
+    },
+    {
+      "SYSTEM": "HIVE",
+      "DATABASE_NAME": "default",
+      "TABLE_NAME": "part_sf10",
+      "ATTRIBUTES": [
+        {
+          "ATTRIBUTE_NAME": "rowkey",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 0
+        },
+        {
+          "ATTRIBUTE_NAME": "p_name",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 1
+        },
+        {
+          "ATTRIBUTE_NAME": "p_mfgr",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 2
+        },
+        {
+          "ATTRIBUTE_NAME": "p_brand",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 3
+        },
+        {
+          "ATTRIBUTE_NAME": "p_type",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 4
+        },
+        {
+          "ATTRIBUTE_NAME": "p_size",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 5
+        },
+        {
+          "ATTRIBUTE_NAME": "p_container",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 6
+        },
+        {
+          "ATTRIBUTE_NAME": "p_retailprice",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 7
+        },
+        {
+          "ATTRIBUTE_NAME": "p_comment",
+          "ATTRIBUTE_TYPE": "VARCHAR",
+          "ATTRIBUTE_ORDER": 8
+        }
+      ]
+    }
+  ]
+}
