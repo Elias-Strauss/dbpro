@@ -1,5 +1,7 @@
 package calcite.test;
 
+import org.apache.calcite.rel.RelWriter;
+import org.apache.calcite.rel.externalize.RelWriterImpl;
 import org.apache.calcite.tools.FrameworkConfig;
 import org.apache.calcite.tools.Frameworks;
 import org.apache.calcite.tools.Planner;
@@ -13,6 +15,7 @@ import org.apache.calcite.rel.RelNode;
 
 import org.apache.calcite.util.SourceStringReader;
 
+import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.util.Properties;
@@ -33,11 +36,11 @@ public class Sql2Rel
         CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
         SchemaPlus rootSchema = calciteConnection.getRootSchema();
         final DataSource ds = JdbcSchema.dataSource(
-                "jdbc:postgresql://localhost:5432/multidb",
+                "jdbc:postgresql://localhost:5432/dvdrental",
                 "org.postgresql.Driver",
                 "postgres",
                 "");
-        rootSchema.add("MULTIDB", JdbcSchema.create(rootSchema, "MULTIDB", ds, null, null));
+        rootSchema.add("DVDRENTAL", JdbcSchema.create(rootSchema, "DVDRENTAL", ds, null, null));
         System.out.println(rootSchema.toString());
 
         FrameworkConfig config = Frameworks.newConfigBuilder()
@@ -48,16 +51,28 @@ public class Sql2Rel
         // se definiraju rulovi, sheme i sve ostalo.
         Planner planner = Frameworks.getPlanner(config);
 
-        SqlNode sqlNode = planner.parse(new SourceStringReader(args[0]));
+        //SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT * FROM dvdrental.\"actor\" as a1,dvdrental.\"film_actor\" as a2 WHERE a1.\"actor_id\"=a2.\"film_id\" "));
+        //SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT * FROM dvdrental.\"actor\" where \"first_name\"='Nick'"));
+        SQLparser parser = new SQLparser();
+        SqlNode sqlNode = parser.getParsed("SELECT * FROM dvdrental.actor where first_name='Nick'");
+
         System.out.println(sqlNode.toString());
 
         sqlNode = planner.validate(sqlNode);
 
         RelRoot relRoot = planner.rel(sqlNode);
         System.out.println(relRoot.toString());
+        RelWriter rw = new RelWriterImpl(new PrintWriter(System.out, true));
 
         RelNode relNode = relRoot.project();
-        System.out.println(RelOptUtil.toString(relNode));
+        System.out.println("Validated Plan:");
+        relNode.explain(rw);
 
+
+        RelAlgOptimizer qo = new RelAlgOptimizer();
+
+        RelNode relNodeOptimized=qo.optimizePlan(relNode);
+        System.out.println("Optimized Plan:");
+        relNodeOptimized.explain(rw);
     }
 }
