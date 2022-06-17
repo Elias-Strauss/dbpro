@@ -39,7 +39,7 @@ public class Sql2Rel
                 "jdbc:postgresql://localhost:5432/dvdrental",
                 "org.postgresql.Driver",
                 "postgres",
-                "");
+                "grzegorz9");
         rootSchema.add("DVDRENTAL", JdbcSchema.create(rootSchema, "DVDRENTAL", ds, null, null));
         System.out.println(rootSchema.toString());
 
@@ -52,9 +52,15 @@ public class Sql2Rel
         Planner planner = Frameworks.getPlanner(config);
 
         //SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT * FROM dvdrental.\"actor\" as a1,dvdrental.\"film_actor\" as a2 WHERE a1.\"actor_id\"=a2.\"film_id\" "));
-        //SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT * FROM dvdrental.\"actor\" where \"first_name\"='Nick'"));
-        SQLparser parser = new SQLparser();
-        SqlNode sqlNode = parser.getParsed("SELECT * FROM dvdrental.actor where first_name='Nick'");
+        SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT \"C\"." +
+                "\"customer_id\",\"P\".\"customer_id\",\"P\".\"amount\"," +
+                "\"P\".\"payment_id\" FROM dvdrental.\"payment\" as p, dvdrental." +
+                "\"customer\" as c WHERE \"P\".\"amount\">5" +
+                " and \"P\".\"customer_id\"=\"C\".\"customer_id\" group by " +
+                "\"P\".\"customer_id\",\"C\".\"customer_id\",\"P\".\"amount\",\"P\".\"payment_id\" " +
+                "order by \"P\".\"amount\" asc"));
+        //SQLparser parser = new SQLparser();
+        //SqlNode sqlNode = parser.getParsed("SELECT * FROM actor");
 
         System.out.println(sqlNode.toString());
 
@@ -74,5 +80,8 @@ public class Sql2Rel
         RelNode relNodeOptimized=qo.optimizePlan(relNode);
         System.out.println("Optimized Plan:");
         relNodeOptimized.explain(rw);
+
+        RelAlgToSpark qt = new RelAlgToSpark();
+        qt.translatePlan(relNodeOptimized);
     }
 }
