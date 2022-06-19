@@ -3,8 +3,14 @@ package calcite.test;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.RelVisitor;
 import org.apache.calcite.rel.core.*;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 public class RelAlgToSpark {
+
+    SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
+    JavaSparkContext sc = new JavaSparkContext(conf);
 
     public String translatePlan(RelNode optimizedPlan){
 
@@ -23,7 +29,9 @@ public class RelAlgToSpark {
                 System.out.println(node);
 
                 if (node instanceof TableScan) {
-
+                    String name =node.getTable().getQualifiedName().get(1).toLowerCase();
+                    JavaRDD<String> distFile = sc.textFile("src/main/resources/"+name+".csv");
+                    System.out.println(distFile.collect());
                 }
 
                 if (node instanceof TableModify) {
