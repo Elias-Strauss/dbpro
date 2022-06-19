@@ -33,12 +33,12 @@ public class RelAlgOptimizer implements QueryOptimizer<RelNode, RelNode> {
         boolean enableJoinOrder = false;
 
         if (enableJoinOrder) {
+            //TODO: Old version please update
             HepProgram program = HepProgram.builder()
                     .addRuleInstance(LoptOptimizeJoinRule.INSTANCE)
                     .addRuleInstance(ProjectJoinTransposeRule.INSTANCE)
                     .addRuleInstance(FilterJoinRule.FILTER_ON_JOIN)
                     .addRuleInstance(ProjectFilterTransposeRule.INSTANCE)
-
                     .build();
 
             HepPlanner hepPlanner = new HepPlanner(program, null, false, null, RelOptCostImpl.FACTORY);
@@ -61,7 +61,6 @@ public class RelAlgOptimizer implements QueryOptimizer<RelNode, RelNode> {
             return optimized;
         } else {
             HepProgram program = HepProgram.builder()
-
                     .addRuleInstance(ProjectFilterTransposeRule.INSTANCE)
                     .addRuleInstance(ProjectJoinTransposeRule.INSTANCE)
                     .addRuleInstance(FilterJoinRule.FILTER_ON_JOIN)

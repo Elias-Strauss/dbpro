@@ -9,13 +9,17 @@ import java.util.List;
 
 public class SparkTest {
 
-    public static void main(String[] args){
-        SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
+    public static void main (String[] args) {
+        SparkConf conf = new SparkConf().setAppName("TestApp").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        //List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
-        //JavaRDD<Integer> distData = sc.parallelize(data);
-        JavaRDD<String> distFile = sc.textFile("src/main/resources/data.txt");
-        System.out.println(distFile.collect());
+
+        List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
+        JavaRDD<Integer> distData = sc.parallelize(data);
+        JavaRDD<String> lines = sc.textFile("C:\\Users\\Reste\\OneDrive\\Desktop\\dvdrental_public_actor.csv");
+        JavaRDD<Integer> lineLengths = lines.map(s -> s.length());
+        int totalLength = lineLengths.reduce((a, b) -> a + b);
+        System.out.println(lines.collect());
     }
+
 
 }
