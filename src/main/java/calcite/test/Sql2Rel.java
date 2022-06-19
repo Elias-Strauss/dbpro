@@ -35,11 +35,12 @@ public class Sql2Rel
         Connection connection = DriverManager.getConnection("jdbc:calcite:");
         CalciteConnection calciteConnection = connection.unwrap(CalciteConnection.class);
         SchemaPlus rootSchema = calciteConnection.getRootSchema();
+        //TODO: do not push the password !!
         final DataSource ds = JdbcSchema.dataSource(
                 "jdbc:postgresql://localhost:5432/dvdrental",
                 "org.postgresql.Driver",
                 "postgres",
-                "grzegorz9");
+                "admin");
         rootSchema.add("DVDRENTAL", JdbcSchema.create(rootSchema, "DVDRENTAL", ds, null, null));
         System.out.println(rootSchema.toString());
 
