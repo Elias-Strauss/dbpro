@@ -14,7 +14,7 @@ RUN echo "export PATH=$PATH:/dbpro/spark-3.2.1-bin-hadoop3.2/bin" >> ~/.bashrc
 
 RUN 	git clone https://github.com/greenplum-db/gporca.git &&\
 	git clone https://github.com/greenplum-db/gp-xerces.git &&\
-	git clone https://github.com/apache/calcite.git
+	git clone https://github.com/apache/optimizers.calcite.git
 RUN 	cd gp-xerces && mkdir build && cd build && ../configure --prefix=/usr/local && make && make install
 
 RUN 	cd gporca && \
