@@ -15,6 +15,7 @@ import org.apache.calcite.rel.RelNode;
 
 import org.apache.calcite.util.SourceStringReader;
 
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.Connection;
@@ -25,6 +26,8 @@ import javax.sql.DataSource;
 import org.apache.calcite.adapter.jdbc.JdbcSchema;
 
 import org.apache.calcite.plan.RelOptUtil;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 // Ovaj SQL upit radi: 'SELECT * FROM multidb."medinfo"'
 
@@ -40,7 +43,7 @@ public class Sql2Rel
                 "jdbc:postgresql://localhost:5432/dvdrental",
                 "org.postgresql.Driver",
                 "postgres",
-                "admin");
+                "grzegorz9");
         rootSchema.add("DVDRENTAL", JdbcSchema.create(rootSchema, "DVDRENTAL", ds, null, null));
         System.out.println(rootSchema.toString());
 
@@ -54,11 +57,11 @@ public class Sql2Rel
 
         //SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT * FROM dvdrental.\"actor\" as a1,dvdrental.\"film_actor\" as a2 WHERE a1.\"actor_id\"=a2.\"film_id\" "));
         SqlNode sqlNode = planner.parse(new SourceStringReader("SELECT \"C\"." +
-                "\"customer_id\",\"P\".\"customer_id\",\"P\".\"amount\"," +
+                "\"customer_id\",\"P\".\"customers_id\",\"P\".\"amount\"," +
                 "\"P\".\"payment_id\" FROM dvdrental.\"payment\" as p, dvdrental." +
                 "\"customer\" as c WHERE \"P\".\"amount\">5" +
-                " and \"P\".\"customer_id\"=\"C\".\"customer_id\" group by " +
-                "\"P\".\"customer_id\",\"C\".\"customer_id\",\"P\".\"amount\",\"P\".\"payment_id\" " +
+                " and \"P\".\"customers_id\"=\"C\".\"customer_id\" group by " +
+                "\"P\".\"customers_id\",\"C\".\"customer_id\",\"P\".\"amount\",\"P\".\"payment_id\" " +
                 "order by \"P\".\"amount\" asc"));
         //SQLparser parser = new SQLparser();
         //SqlNode sqlNode = parser.getParsed("SELECT * FROM actor");
@@ -82,7 +85,16 @@ public class Sql2Rel
         System.out.println("Optimized Plan:");
         relNodeOptimized.explain(rw);
 
+
         RelAlgToSpark qt = new RelAlgToSpark();
-        qt.translatePlan(relNodeOptimized);
+        JSONArray output =qt.translatePlan(relNodeOptimized);
+        JSONArray outputInversed = new JSONArray();
+        for (Object o : output){
+            JSONObject temp = (JSONObject) o;
+            outputInversed.add(0,temp);
+        }
+        FileWriter file = new FileWriter("src/main/resources/output.json");
+        file.write(outputInversed.toJSONString());
+        file.close();
     }
 }
