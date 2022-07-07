@@ -3,11 +3,11 @@ package optimizers.calcite;
 import org.apache.calcite.schema.Statistic;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CsvTableStatistic implements Statistic {
+public class GenTableStatistic implements Statistic {
 
     private final long rowCount;
 
-    public CsvTableStatistic(long rowCount) {
+    public GenTableStatistic(long rowCount) {
         this.rowCount = rowCount;
     }
 

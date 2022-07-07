@@ -1,5 +1,6 @@
 package main;
 
+import optimizers.calcite.CalciteOptimizer;
 import optimizers.calcite.SqlQueryParser;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.commons.exec.CommandLine;
@@ -23,13 +24,17 @@ public class ConsoleInput {
 
             String input = reader.readLine();
 
-            SqlQueryParser SqlQueryParser = new SqlQueryParser();
-
             if (input.startsWith("SQL ")) {
                 //1. SQL Parser
                 //2. Optimizer
-                System.out.println(input.substring(4));
-                System.out.println(SqlQueryParser.parseString(input.substring(4)));
+                String sqlQuery = input.substring(4);
+                String schemaPath = "src/main/resources/TPC-HTestDaten/CalciteSchema.json";
+
+
+                CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
+
+                System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
+
             } else {
                 switch (input){
                     case "exit":
