@@ -1,9 +1,9 @@
 package test;
 
-import optimizers.calcite.CsvSchema;
+import optimizers.calcite.GenSchema;
 import optimizers.calcite.SqlQueryParser;
-import optimizers.calcite.CsvTable;
-import optimizers.calcite.CsvTableStatistic;
+import optimizers.calcite.GenTable;
+import optimizers.calcite.GenTableStatistic;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.config.CalciteConnectionConfig;
 import org.apache.calcite.config.CalciteConnectionConfigImpl;
@@ -12,11 +12,16 @@ import org.apache.calcite.jdbc.CalciteSchema;
 import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
 import org.apache.calcite.plan.*;
 import org.apache.calcite.plan.hep.HepPlanner;
+import org.apache.calcite.plan.hep.HepProgram;
+import org.apache.calcite.plan.hep.HepProgramBuilder;
 import org.apache.calcite.plan.volcano.VolcanoPlanner;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.prepare.Prepare;
 import org.apache.calcite.rel.RelRoot;
 import org.apache.calcite.rel.rules.CoreRules;
+import org.apache.calcite.rel.rules.FilterJoinRule;
+import org.apache.calcite.rel.rules.ProjectFilterTransposeRule;
+import org.apache.calcite.rel.rules.ProjectJoinTransposeRule;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.rex.RexBuilder;
 import org.apache.calcite.sql.SqlNode;
@@ -28,9 +33,12 @@ import org.apache.calcite.sql.validate.SqlValidatorUtil;
 import org.apache.calcite.sql2rel.SqlToRelConverter;
 import org.apache.calcite.sql2rel.StandardConvertletTable;
 import org.apache.calcite.tools.*;
-import org.apache.commons.codec.language.bm.Rule;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +46,7 @@ import java.util.Properties;
 
 public class CalciteCSVTest {
 
-    public static void main (String[] strg) throws SqlParseException, ValidationException, RelConversionException {
+    public static void main (String[] strg) throws SqlParseException, ValidationException, RelConversionException, IOException, ParseException {
         File CsvDirectory = new File("src/main/resources/testData");
         //CsvSchema csvSchema = new CsvSchema(CsvDirectory, CsvTable.Flavor.SCANNABLE);
         //System.out.println(csvSchema.getTable("actor"));
@@ -52,12 +60,28 @@ public class CalciteCSVTest {
 
         RelDataTypeFactory typeFactory = new JavaTypeFactoryImpl();
 
-        CsvTable actorTable = new CsvTable(
-                "actor",
-                List.of("id", "name", "city", "dateCreated"),
-                List.of(SqlTypeName.INTEGER, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.TIME),
-                new CsvTableStatistic(200));
-        CsvSchema schema = new CsvSchema("Test", Map.of("actor", actorTable));
+//        JSONParser jsonParser = new JSONParser();
+//
+//        Reader reader = new FileReader("src/main/resources/TPC-HTestDaten/CalciteSchema.json");
+//
+//        Object jsonObj = jsonParser.parse(reader);
+//
+//        JSONObject jsonObject = (JSONObject) jsonObj;
+//
+//        System.out.println(jsonObject.get("Tables"));
+//
+//        JSONArray Tables = (JSONArray) jsonObject.get("Tables");
+//
+//        System.out.println(Tables.get(0));
+
+        GenSchema schema = new GenSchema("src/main/resources/TPC-HTestDaten/CalciteSchema.json");
+
+        GenTable actorTable = new GenTable(
+                "lineitem",
+                List.of("orderkey", "partkey", "suppkey", "linenumber", "quantity", "extendedprice", "discount", "tax", "returnflag", "linestatus", "shipdate", "commitdate", "receipdate", "shipinstruct", "shipmode", "comment"),
+                List.of(SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.CHAR),
+                new GenTableStatistic(200));
+        GenSchema test = new GenSchema("Test", Map.of("lineitem", actorTable));
 
         CalciteSchema rootSchema = CalciteSchema.createRootSchema(false, false);
         rootSchema.add(schema.getSchemaName(), schema);
@@ -83,8 +107,32 @@ public class CalciteCSVTest {
         );
 
 
-        SqlNode sqlNode = SqlQueryParser.parseString("SELECT * FROM actor");
-        System.out.println(sqlNode.toString());
+        String query = "select\n" +
+                "        returnflag,\n" +
+                "        linestatus,\n" +
+                "        sum(quantity) as sum_qty,\n" +
+                "        sum(extendedprice) as sum_base_price,\n" +
+                "        sum(extendedprice * (1 - discount)) as sum_disc_price,\n" +
+                "        sum(extendedprice * (1 - discount) * (1 + tax)) as sum_charge,\n" +
+                "        avg(quantity) as avg_qty,\n" +
+                "        avg(extendedprice) as avg_price,\n" +
+                "        avg(discount) as avg_disc,\n" +
+                "        count(*) as count_order\n" +
+                "from\n" +
+                "        lineitem\n" +
+                "where\n" +
+                "        shipdate <= date '1998-12-01' - interval '90' day\n" +
+                "group by\n" +
+                "        returnflag,\n" +
+                "        linestatus\n" +
+                "order by\n" +
+                "        returnflag,\n" +
+                "        linestatus";
+
+        System.out.println("\u001B[31m" + "------------SQL input------------" + "\u001B[0m");
+        System.out.println(query);
+        System.out.println("\n" + "\u001B[31m" + "------------Parsed SQL statement------------" + "\u001B[0m");
+        SqlNode sqlNode = SqlQueryParser.parseString(query);
         SqlNode validated = validator.validate(sqlNode);
         System.out.println(validated.toString());
 
@@ -95,8 +143,16 @@ public class CalciteCSVTest {
 
         planner.addRelTraitDef(ConventionTraitDef.INSTANCE);
 
+        HepProgram hepProgram = new HepProgramBuilder()
+                .addRuleInstance(ProjectFilterTransposeRule.Config.DEFAULT.toRule())
+                .addRuleInstance(ProjectJoinTransposeRule.Config.DEFAULT.toRule())
+                .addRuleInstance(FilterJoinRule.FilterIntoJoinRule.FilterIntoJoinRuleConfig.DEFAULT.toRule())
+                .build();
+
+        HepPlanner hepPlanner = new HepPlanner(hepProgram);
+
         RelOptCluster cluster = RelOptCluster.create(
-                planner,
+                hepPlanner,
                 new RexBuilder(typeFactory)
         );
 
@@ -114,8 +170,6 @@ public class CalciteCSVTest {
 
         RelRoot root = converter.convertQuery(validated, false, true);
 
-        System.out.println(root.toString());
-
         Program program = Programs.of(RuleSets.ofList(
                 CoreRules.FILTER_TO_CALC,
                 CoreRules.PROJECT_TO_CALC,
@@ -123,13 +177,19 @@ public class CalciteCSVTest {
                 CoreRules.PROJECT_CALC_MERGE
                 ));
 
-        program.run(
-                planner,
-                root.rel,
-                RelTraitSet.createEmpty(),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        hepPlanner.setRoot(root.rel);
+        System.out.println("\n" + "\u001B[31m" + "------------Relational pLan------------" + "\u001B[0m");
+        System.out.println(root.rel.explain());
+        System.out.println("\u001B[31m" + "------------Optimized plan------------" + "\u001B[0m");
+        System.out.println(hepPlanner.findBestExp().explain());
+
+//        program.run(
+//                planner,
+//                root.rel,
+//                RelTraitSet.createEmpty(),
+//                Collections.emptyList(),
+//                Collections.emptyList()
+//        );
 
 //        // Ponasanje planner-a definira se konfiguracijom. U njoj
 //        // se definiraju rulovi, sheme i sve ostalo.

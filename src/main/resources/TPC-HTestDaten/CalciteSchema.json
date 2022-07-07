@@ -1,0 +1,171 @@
+{
+  "SchemaName": "TPC-H",
+  "Tables": [
+    {
+      "Name": "lineitem",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "orderkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "partkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "suppkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "linenumber",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "quantity",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "extendedprice",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "discount",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "tax",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "returnflag",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_1"
+        },
+        {
+          "Name": "linestatus",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_1"
+        },
+        {
+          "Name": "shipdate",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "date"
+        },
+        {
+          "Name": "commitdate",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "date"
+        },
+        {
+          "Name": "receiptdate",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "date"
+        },
+        {
+          "Name": "shipinstruct",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_25"
+        },
+        {
+          "Name": "shipmode",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_10"
+        },
+        {
+          "Name": "comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_44"
+        }
+      ]
+    },
+    {
+      "Name": "part",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "partkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "name",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_55"
+        },
+        {
+          "Name": "mfgr",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_25"
+        },
+        {
+          "Name": "brand",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_10"
+        },
+        {
+          "Name": "type",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_25"
+        },
+        {
+          "Name": "size",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "container",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_10"
+        },
+        {
+          "Name": "retailprice",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_23"
+        }
+      ]
+    }
+  ]
+}

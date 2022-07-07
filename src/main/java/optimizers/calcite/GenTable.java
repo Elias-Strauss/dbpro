@@ -8,15 +8,15 @@ import org.apache.calcite.sql.type.SqlTypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvTable extends AbstractTable {
+public class GenTable extends AbstractTable {
 
     private final String name;
     private final List<String> fieldNames;
     private final List<SqlTypeName> fieldTypes;
-    private final CsvTableStatistic statistic;
+    private final GenTableStatistic statistic;
     private RelDataType rowType;
 
-    public CsvTable(String name, List<String> fieldNames, List<SqlTypeName> fieldTypes, CsvTableStatistic statistic) {
+    public GenTable(String name, List<String> fieldNames, List<SqlTypeName> fieldTypes, GenTableStatistic statistic) {
         this.name = name;
         this.fieldNames = fieldNames;
         this.fieldTypes = fieldTypes;
@@ -43,5 +43,17 @@ public class CsvTable extends AbstractTable {
         }
 
         return rowType;
+    }
+
+    @Override
+    public String toString () {
+        StringBuilder returnString = new StringBuilder();
+
+        returnString.append("Table: ").append(this.name).append("\n\n");
+        for (int i = 0; i < this.fieldNames.size(); i++) {
+            returnString.append(this.fieldNames.get(i)).append(" | ").append(this.fieldTypes.get(i)).append("\n");
+        }
+
+        return returnString.append("--------------\n").toString();
     }
 }
