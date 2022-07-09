@@ -8,97 +8,97 @@
       },
       "Fields": [
         {
-          "Name": "orderkey",
+          "Name": "l_orderkey",
           "PrimaryKey": "true",
           "ForeignKey": "true",
           "Type": "integer"
         },
         {
-          "Name": "partkey",
+          "Name": "l_partkey",
           "PrimaryKey": "false",
           "ForeignKey": "true",
           "Type": "integer"
         },
         {
-          "Name": "suppkey",
+          "Name": "l_suppkey",
           "PrimaryKey": "false",
           "ForeignKey": "true",
           "Type": "integer"
         },
         {
-          "Name": "linenumber",
+          "Name": "l_linenumber",
           "PrimaryKey": "true",
           "ForeignKey": "false",
           "Type": "integer"
         },
         {
-          "Name": "quantity",
+          "Name": "l_quantity",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "decimal"
         },
         {
-          "Name": "extendedprice",
+          "Name": "l_extendedprice",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "decimal"
         },
         {
-          "Name": "discount",
+          "Name": "l_discount",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "decimal"
         },
         {
-          "Name": "tax",
+          "Name": "l_tax",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "decimal"
         },
         {
-          "Name": "returnflag",
+          "Name": "l_returnflag",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_1"
         },
         {
-          "Name": "linestatus",
+          "Name": "l_linestatus",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_1"
         },
         {
-          "Name": "shipdate",
+          "Name": "l_shipdate",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "date"
         },
         {
-          "Name": "commitdate",
+          "Name": "l_commitdate",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "date"
         },
         {
-          "Name": "receiptdate",
+          "Name": "l_receiptdate",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "date"
         },
         {
-          "Name": "shipinstruct",
+          "Name": "l_shipinstruct",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_25"
         },
         {
-          "Name": "shipmode",
+          "Name": "l_shipmode",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_10"
         },
         {
-          "Name": "comment",
+          "Name": "l_comment",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "varchar_44"
@@ -112,58 +112,316 @@
       },
       "Fields": [
         {
-          "Name": "partkey",
+          "Name": "p_partkey",
           "PrimaryKey": "true",
           "ForeignKey": "false",
           "Type": "integer"
         },
         {
-          "Name": "name",
+          "Name": "p_name",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "varchar_55"
         },
         {
-          "Name": "mfgr",
+          "Name": "p_mfgr",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_25"
         },
         {
-          "Name": "brand",
+          "Name": "p_brand",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_10"
         },
         {
-          "Name": "type",
+          "Name": "p_type",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "varchar_25"
         },
         {
-          "Name": "size",
+          "Name": "p_size",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "integer"
         },
         {
-          "Name": "container",
+          "Name": "p_container",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "char_10"
         },
         {
-          "Name": "retailprice",
+          "Name": "p_retailprice",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "decimal"
         },
         {
-          "Name": "comment",
+          "Name": "p_comment",
           "PrimaryKey": "false",
           "ForeignKey": "false",
           "Type": "varchar_23"
+        }
+      ]
+    },
+    {
+      "Name": "supplier",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "s_suppkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "s_name",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_25"
+        },
+        {
+          "Name": "s_address",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_40"
+        },
+        {
+          "Name": "s_nationkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "s_phone",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_15"
+        },
+        {
+          "Name": "s_acctbal",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "s_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_101"
+        }
+      ]
+    },
+    {
+      "Name": "partsupp",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "ps_partkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "ps_suppkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "ps_availqty",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "ps_supplycost",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "ps_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_199"
+        }
+      ]
+    },
+    {
+      "Name": "customer",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "c_custkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "c_name",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_25"
+        },
+        {
+          "Name": "c_address",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_40"
+        },
+        {
+          "Name": "c_nationkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "c_phone",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_15"
+        },
+        {
+          "Name": "c_acctbal",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "c_mktsegment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_10"
+        },
+        {
+          "Name": "c_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_117"
+        }
+      ]
+    },
+    {
+      "Name": "orders",
+      "Statistics": {
+        "rowCount": "100000"
+      },
+      "Fields": [
+        {
+          "Name": "o_orderkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "o_custkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "o_orderstatus",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_1"
+        },
+        {
+          "Name": "o_totalprice",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "decimal"
+        },
+        {
+          "Name": "o_orderpriority",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_15"
+        },
+        {
+          "Name": "o_clerk",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_15"
+        },
+        {
+          "Name": "o_shippriority",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "o_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_79"
+        }
+      ]
+    },
+    {
+      "Name": "nation",
+      "Statistics": {
+        "rowCount": "25"
+      },
+      "Fields": [
+        {
+          "Name": "n_nationkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "n_name",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_25"
+        },
+        {
+          "Name": "n_regionkey",
+          "PrimaryKey": "false",
+          "ForeignKey": "true",
+          "Type": "integer"
+        },
+        {
+          "Name": "n_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_152"
+        }
+      ]
+    },
+    {
+      "Name": "region",
+      "Statistics": {
+        "rowCount": "5"
+      },
+      "Fields": [
+        {
+          "Name": "r_regionkey",
+          "PrimaryKey": "true",
+          "ForeignKey": "false",
+          "Type": "integer"
+        },
+        {
+          "Name": "r_name",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "char_25"
+        },
+        {
+          "Name": "r_comment",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "varchar_152"
         }
       ]
     }
