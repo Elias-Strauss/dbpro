@@ -342,6 +342,12 @@
           "Type": "decimal"
         },
         {
+          "Name": "o_orderdate",
+          "PrimaryKey": "false",
+          "ForeignKey": "false",
+          "Type": "date"
+        },
+        {
           "Name": "o_orderpriority",
           "PrimaryKey": "false",
           "ForeignKey": "false",

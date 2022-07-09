@@ -91,14 +91,13 @@ public class ConsoleProgram {
                                             StringBuilder stringBuilder = new StringBuilder();
                                             for (String s:lines) {
                                                 if (!(s.startsWith(":") || s.startsWith("-"))) {
-                                                    s = s.replace(';', '\n');
-                                                    stringBuilder.append(s);
+                                                    stringBuilder.append(s.replace('\r', ' '));
                                                 }
                                             }
 
                                             String sqlQuery = stringBuilder.toString();
 
-                                            System.out.println(calciteOptimizer.optimizeQuery(sqlQuery));
+                                            System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
 
                                         } catch (IOException e) {
                                             System.err.println(e.getMessage());
@@ -109,15 +108,6 @@ public class ConsoleProgram {
 
                                     });
                         }
-
-
-
-
-
-
-
-
-                        //System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
 
                         break;
                     default:
