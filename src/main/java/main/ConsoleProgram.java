@@ -40,13 +40,62 @@ public class ConsoleProgram {
                 String sqlQuery = input.substring(4);
                 String schemaPath = "src/main/resources/TPC-HTestDaten/CalciteSchema.json";
 
-
                 CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
 
                 System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
 
-            } else {
-                switch (input){
+            } else if (input.startsWith("run tpc-h")) {
+                AtomicInteger queryNumber = new AtomicInteger(-1);
+                if (isParsable(input.substring(9).trim())) {
+                    queryNumber.set(Integer.parseInt(input.substring(9).trim()));
+                }
+
+                    try (Stream<Path> paths = Files.walk(Paths.get("src/main/resources/tpc-h_queries"))) {
+
+                        String schemaPath = "src/main/resources/TPC-HTestDaten/CalciteSchema.json";
+                        CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
+
+                        AtomicInteger queryCount = new AtomicInteger(1);
+
+                        paths.filter(Files::isRegularFile)
+                            .forEach(queryPath -> {
+
+                                if (queryCount.get() == queryNumber.get() || queryNumber.get() == -1) {
+
+                                    //get file content
+                                    System.out.println("TPC-H Query " + queryCount.get() + ":\n");
+
+                                    try {
+                                        String query = Files.readString(queryPath);
+                                        //filter out comments starting with : or -
+                                        String[] lines = query.split("\n");
+
+                                        StringBuilder stringBuilder = new StringBuilder();
+                                        for (String s:lines) {
+                                            if (!(s.startsWith(":") || s.startsWith("-"))) {
+                                                stringBuilder.append(s.replace('\r', ' '));
+                                            }
+                                        }
+
+                                        String sqlQuery = stringBuilder.toString();
+
+
+                                        System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
+
+                                    } catch (IOException e) {
+                                        System.err.println(e.getMessage());
+                                        throw new RuntimeException(e);
+                                    } catch (SqlParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                                queryCount.getAndIncrement();
+                            });
+                    }
+
+
+            }else {
+                switch (input) {
                     case "exit":
                         return;
                     case "python":
@@ -67,55 +116,21 @@ public class ConsoleProgram {
                         int exitCode = executor.execute(cmdLine);
                         System.out.println(outputStream);
                         break;
-                    case "run tpc-h":
-
-                        try (Stream<Path> paths = Files.walk(Paths.get("src/main/resources/tpc-h_queries"))) {
-
-
-                            String schemaPath = "src/main/resources/TPC-HTestDaten/CalciteSchema.json";
-                            CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
-
-                            AtomicInteger queryCount = new AtomicInteger(1);
-
-                            paths.filter(Files::isRegularFile)
-                                    .forEach(queryPath -> {
-                                        System.out.println("TPC-H Query " + queryCount + ":\n");
-                                        queryCount.getAndIncrement();
-
-                                        //get file content
-                                        try {
-                                            String query = Files.readString(queryPath);
-                                            //filter out comments starting with : or -
-                                            String[] lines = query.split("\n");
-
-                                            StringBuilder stringBuilder = new StringBuilder();
-                                            for (String s:lines) {
-                                                if (!(s.startsWith(":") || s.startsWith("-"))) {
-                                                    stringBuilder.append(s.replace('\r', ' '));
-                                                }
-                                            }
-
-                                            String sqlQuery = stringBuilder.toString();
-
-                                            System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
-
-                                        } catch (IOException e) {
-                                            System.err.println(e.getMessage());
-                                            throw new RuntimeException(e);
-                                        } catch (SqlParseException e) {
-                                            throw new RuntimeException(e);
-                                        }
-
-                                    });
-                        }
-
-                        break;
                     default:
                         System.out.println("Unknown command: \"" + input + "\"");
                 }
             }
 
 
+        }
+    }
+
+    private static boolean isParsable(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (final NumberFormatException e) {
+            return false;
         }
     }
 

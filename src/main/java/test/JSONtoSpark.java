@@ -9,8 +9,8 @@ import java.nio.file.Path;
 import java.util.*;
 
 import org.apache.spark.api.java.function.PairFunction;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import scala.Tuple2;
 
 public class JSONtoSpark {
@@ -186,7 +186,6 @@ public class JSONtoSpark {
                 return new Tuple2(cols[colID],s);
             }
         });
-
     }*/
 
 }

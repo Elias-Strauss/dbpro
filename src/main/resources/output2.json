@@ -1,0 +1,15 @@
+[
+  {
+    "TableName": "customer",
+    "id": "10",
+    "type": "TableScan"
+  },
+  {
+    "colIDs": [
+      "0"
+    ],
+    "id": "40",
+    "type": "Project",
+    "id_a": "10"
+  }
+]

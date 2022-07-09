@@ -3,9 +3,8 @@ package optimizers.calcite;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 import org.apache.calcite.sql.type.SqlTypeName;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import scala.reflect.internal.Trees;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,7 +30,7 @@ public class GenSchema extends AbstractSchema {
             Path filePath = Path.of(fileLocation);
             String jsonContent = Files.readString(filePath);
 
-            JSONObject schema = new JSONObject(jsonContent);
+            JSONObject schema = JSONObject.parseObject(jsonContent);
             JSONArray Tables = (JSONArray) schema.get("Tables");
 
             tmpName = schema.get("SchemaName").toString();

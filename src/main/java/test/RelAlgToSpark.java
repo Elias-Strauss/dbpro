@@ -7,8 +7,8 @@ import org.apache.calcite.rex.RexCall;
 import org.apache.calcite.rex.RexNode;
 import org.apache.calcite.rex.RexVisitor;
 import org.apache.calcite.sql.SqlKind;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,7 +50,7 @@ public class RelAlgToSpark {
                     TableScan.put("type","TableScan");
                     TableScan.put("TableName",name);
                     TableScan.put("id",String.valueOf(node.getId()));
-                    operations.put(TableScan);
+                    operations.add(TableScan);
 
                     System.out.println("scan");
                     System.out.println(TableScan);
@@ -77,12 +77,12 @@ public class RelAlgToSpark {
                         /*System.out.println("child");
                         System.out.println(r.toString());*/
                         if(r.toString().substring(0,1).equals("$"))
-                        colIDs.put(r.toString().replace("$",""));
+                        colIDs.add(r.toString().replace("$",""));
                         else{
 
 
                             RexCall rexCall = (RexCall) r;
-                            colIDs.put(recTrav(rexCall));
+                            colIDs.add(recTrav(rexCall));
                             /*System.out.println(rexCall.operands);
                             System.out.println(rexCall.op);
                             System.out.println(rexCall.operands.get(0));
@@ -96,7 +96,7 @@ public class RelAlgToSpark {
                     }
                     Project.put("colIDs",colIDs);
                     Project.put("id_a",String.valueOf(projnode2.getInput().getId()));
-                    operations.put(Project);
+                    operations.add(Project);
                     System.out.println(Project);
 
                     //System.out.println(node.);
@@ -146,7 +146,7 @@ public class RelAlgToSpark {
 
                     Filter.put("id_a",String.valueOf(filter.getInput().getId()));
                     //System.out.println(Filter);
-                    operations.put(Filter);
+                    operations.add(Filter);
                 }
 
                 if (node instanceof Join) {
@@ -173,7 +173,7 @@ public class RelAlgToSpark {
                     String joinIDright = String.valueOf(join.getRight().getRowType().getFieldNames().indexOf(nameRight));
                     Join.put("colIDLeft",joinIDleft);
                     Join.put("colIDRight",joinIDright);
-                    operations.put(Join);
+                    operations.add(Join);
 
 
                 }
@@ -186,7 +186,7 @@ public class RelAlgToSpark {
                     //System.out.println(sortNode.);
                     JSONArray colIDs = new JSONArray();
                     for(RexNode r:sortNode.getSortExps()){
-                        colIDs.put(r.toString().replace("$", ""));
+                        colIDs.add(r.toString().replace("$", ""));
                         //r.
                     }
                     String[] split = sortNode.toString().split("dir");
@@ -194,9 +194,9 @@ public class RelAlgToSpark {
                     for(int i=1;i<split.length;i++){
                         //System.out.println(split[i]);
                         if(split[i].replace("ASC","").length()<split[i].length()){
-                            orders.put("ASC");
+                            orders.add("ASC");
                         }else{
-                            orders.put("DESC");
+                            orders.add("DESC");
                         }
                     }
                     //int sortKey = Integer.parseInt(sortNode.getChildExps().get(0).toString().replace("$", ""));
@@ -213,7 +213,7 @@ public class RelAlgToSpark {
                     Sort.put("colIDs",colIDs);
                     Sort.put("orders",orders);
 
-                    operations.put(Sort);
+                    operations.add(Sort);
                     System.out.println(Sort);
 
                 }
@@ -231,7 +231,7 @@ public class RelAlgToSpark {
                     //System.out.println(aggregate.getGroupSet());
                     JSONArray groupCols = new JSONArray();
                     for (int i : aggregate.getGroupSet()){
-                        groupCols.put(String.valueOf(i));
+                        groupCols.add(String.valueOf(i));
                     }
                     Aggregate.put("groupCols",groupCols);
                     JSONArray aggrs = new JSONArray();
@@ -241,10 +241,10 @@ public class RelAlgToSpark {
                         System.out.println(ac.getArgList());*/
                         agg.put("type",ac.getAggregation().toString());
                         if(!(ac.getAggregation().toString().equals("COUNT")))agg.put("colID",ac.getArgList().get(0));
-                        aggrs.put(agg);
+                        aggrs.add(agg);
                     }
                     Aggregate.put("aggregations",aggrs);
-                    operations.put(Aggregate);
+                    operations.add(Aggregate);
                     System.out.println(Aggregate);
                 }
 

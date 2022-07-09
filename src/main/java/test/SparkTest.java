@@ -12,7 +12,6 @@ public class SparkTest {
     public static void main (String[] args) {
         /*SparkConf conf = new SparkConf().setAppName("TestApp").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
-
         List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
         JavaRDD<Integer> distData = sc.parallelize(data);
         JavaRDD<String> lines = sc.textFile("C:\\Users\\Reste\\OneDrive\\Desktop\\dvdrental_public_actor.csv");
@@ -23,6 +22,5 @@ public class SparkTest {
         temp.translate();
 
     }
-
 
 }

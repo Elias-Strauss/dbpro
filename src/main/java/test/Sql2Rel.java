@@ -22,13 +22,12 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.util.Properties;
 import javax.sql.DataSource;
-import org.postgresql.Driver;
 
 import org.apache.calcite.adapter.jdbc.JdbcSchema;
 
 import org.apache.calcite.plan.RelOptUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 // Ovaj SQL upit radi: 'SELECT * FROM multidb."medinfo"'
 
@@ -114,13 +113,13 @@ public class Sql2Rel
 
 
         RelAlgToSpark qt = new RelAlgToSpark();
-        JSONArray output =qt.translatePlan(relNode);
+        JSONArray output = qt.translatePlan(relNode);
         System.out.println(output);
         JSONArray outputInversed = new JSONArray();
         for (Object o : output){
             System.out.println(o);
             JSONObject temp = (JSONObject) o;
-            outputInversed.put(temp);
+            outputInversed.add(temp);
         }
         FileWriter file = new FileWriter("src/main/resources/output.json");
         file.write(outputInversed.toString());
