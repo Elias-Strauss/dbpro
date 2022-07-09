@@ -38,29 +38,29 @@ public class Sql2Rel
     {
         String schemaPath = "src/main/resources/TPC-HTestDaten/CalciteSchema.json";
 
-        /*String sqlQuery = "select\n" +
-                "        returnflag,\n" +
-                "        linestatus,\n" +
-                "        sum(quantity) as sum_qty,\n" +
-                "        sum(extendedprice) as sum_base_price,\n" +
-                "        sum(extendedprice * (1 - discount)) as sum_disc_price,\n" +
-                "        sum(extendedprice * (1 - discount) * (1 + tax)) as sum_charge,\n" +
-                "        avg(quantity) as avg_qty,\n" +
-                "        avg(extendedprice) as avg_price,\n" +
-                "        avg(discount) as avg_disc,\n" +
-                "        count(*) as count_order\n" +
-                "from\n" +
-                "        lineitem\n" +
-                "where\n" +
-                "        shipdate <= date '1998-12-01' - interval '90' day\n" +
-                "group by\n" +
-                "        returnflag,\n" +
-                "        linestatus\n" +
-                "order by\n" +
-                "        returnflag,\n" +
-                "        linestatus";*/
-
         String sqlQuery = "select\n" +
+                "\tl_returnflag,\n" +
+                "\tl_linestatus,\n" +
+                "\tsum(l_quantity) as sum_qty,\n" +
+                "\tsum(l_extendedprice) as sum_base_price,\n" +
+                "\tsum(l_extendedprice * (1 - l_discount)) as sum_disc_price,\n" +
+                "\tsum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,\n" +
+                "\tavg(l_quantity) as avg_qty,\n" +
+                "\tavg(l_extendedprice) as avg_price,\n" +
+                "\tavg(l_discount) as avg_disc,\n" +
+                "\tcount(*) as count_order\n" +
+                "from\n" +
+                "\tlineitem\n" +
+                "where\n" +
+                "\tl_shipdate <= date '1998-12-01' - interval '90' day\n" +
+                "group by\n" +
+                "\tl_returnflag,\n" +
+                "\tl_linestatus\n" +
+                "order by\n" +
+                "\tl_returnflag,\n" +
+                "\tl_linestatus";
+
+        /*String sqlQuery = "select\n" +
                 "        s_acctbal,\n" +
                 "        s_name,\n" +
                 "        n_name,\n" +
@@ -103,7 +103,7 @@ public class Sql2Rel
                 "        n_name,\n" +
                 "        s_name,\n" +
                 "        p_partkey\n" +
-                "limit 100";
+                "limit 100";*/
 
         CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
 
@@ -114,14 +114,16 @@ public class Sql2Rel
 
 
         RelAlgToSpark qt = new RelAlgToSpark();
-        //JSONArray output =qt.translatePlan(relNode);
-        /*JSONArray outputInversed = new JSONArray();
+        JSONArray output =qt.translatePlan(relNode);
+        System.out.println(output);
+        JSONArray outputInversed = new JSONArray();
         for (Object o : output){
+            System.out.println(o);
             JSONObject temp = (JSONObject) o;
-            outputInversed.put(0,temp);
+            outputInversed.put(temp);
         }
         FileWriter file = new FileWriter("src/main/resources/output.json");
         file.write(outputInversed.toString());
-        file.close();*/
+        file.close();
     }
 }
