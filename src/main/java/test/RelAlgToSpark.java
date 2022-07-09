@@ -46,9 +46,9 @@ public class RelAlgToSpark {
                     TableScan.put("id",String.valueOf(node.getId()));
                     operations.put(TableScan);
 
-                    /*System.out.println("scan");
-                    System.out.println(counter);
-                    System.out.println(node);*/
+                    System.out.println("scan");
+                    System.out.println(TableScan);
+                    System.out.println(node);
                 }
 
                 if (node instanceof TableModify) {
@@ -56,9 +56,9 @@ public class RelAlgToSpark {
                 }
                 //TODO: handle the order of the projected columns
                 if (node instanceof Project) {
-                    //System.out.println("project "+counter);
-                    //System.out.println(node.getRowType().getFieldNames());
-                    //System.out.println(node.getInput(0).getRowType().getFieldNames());
+                    System.out.println("project "+counter);
+                    System.out.println(node.getRowType().getFieldNames());
+                    System.out.println(node.getInput(0).getRowType().getFieldNames());
                     Project projnode2 = (Project) node;
                     JSONObject Project = new JSONObject();
                     Project.put("type","Project");
@@ -79,24 +79,28 @@ public class RelAlgToSpark {
 
                 //TODO: filter condition "AND"/"OR", fix condition <=
                 if (node instanceof Filter) {
-                    /*System.out.println("filter "+counter);
+                    System.out.println("filter "+counter);
                     System.out.println(node);
-                    System.out.println(node.getInput(0).getRowType().getFieldNames());*/
+                    System.out.println(node.getInput(0).getRowType().getFieldNames());
                     Filter filter = (Filter) node;
                     JSONObject Filter = new JSONObject();
                     Filter.put("type","Filter");
                     Filter.put("id",String.valueOf(node.getId()));
                     RexNode cond = filter.getCondition();
-                    Filter.put("condition",cond.toString().substring(0,1));
+                    Filter.put("condition",((RexCall) cond).op.toString());
                     List<RexNode> operands = ((RexCall) cond).getOperands();
+                    System.out.println(((RexCall) cond).op.toString());
+                    System.out.println(operands);
                     Filter.put("colID",operands.get(0).toString().replace("$", ""));
                     Filter.put("conditionVal",operands.get(1).toString().split(":")[0]);
                     Filter.put("id_a",String.valueOf(filter.getInput().getId()));
+                    System.out.println(Filter);
                     operations.put(Filter);
                 }
 
                 if (node instanceof Join) {
-                    //System.out.println(node);
+                    System.out.println("join");
+                    System.out.println(node);
                     JSONObject Join = new JSONObject();
                     Join.put("type","Join");
                     Join.put("id",String.valueOf(node.getId()));
@@ -124,7 +128,7 @@ public class RelAlgToSpark {
                 }
 
                 if (node instanceof Sort) {
-                    //System.out.println("sort");
+                    System.out.println("sort");
                     Sort sortNode = (Sort) node;
                     //int sortKey = Integer.parseInt(sortNode.getChildExps().get(0).toString().replace("$", ""));
                     int sortKey = Integer.parseInt(sortNode.getSortExps().get(0).toString().replace("$", ""));
