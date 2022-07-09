@@ -33,10 +33,6 @@ import org.apache.calcite.sql.validate.SqlValidatorUtil;
 import org.apache.calcite.sql2rel.SqlToRelConverter;
 import org.apache.calcite.sql2rel.StandardConvertletTable;
 import org.apache.calcite.tools.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.util.Collections;
@@ -46,7 +42,7 @@ import java.util.Properties;
 
 public class CalciteCSVTest {
 
-    public static void main (String[] strg) throws SqlParseException, ValidationException, RelConversionException, IOException, ParseException {
+    public static void main (String[] strg) throws SqlParseException, ValidationException, RelConversionException, IOException {
         File CsvDirectory = new File("src/main/resources/testData");
         //CsvSchema csvSchema = new CsvSchema(CsvDirectory, CsvTable.Flavor.SCANNABLE);
         //System.out.println(csvSchema.getTable("actor"));

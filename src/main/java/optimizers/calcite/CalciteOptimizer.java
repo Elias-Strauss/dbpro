@@ -27,6 +27,7 @@ import org.apache.calcite.sql.validate.SqlValidatorUtil;
 import org.apache.calcite.sql2rel.SqlToRelConverter;
 import org.apache.calcite.sql2rel.StandardConvertletTable;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -34,7 +35,7 @@ public class CalciteOptimizer {
 
     private final GenSchema schema;
 
-    public CalciteOptimizer(String schemaPath) {
+    public CalciteOptimizer(String schemaPath) throws IOException {
         this.schema = new GenSchema(schemaPath);
     }
 

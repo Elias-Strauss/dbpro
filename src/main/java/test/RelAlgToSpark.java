@@ -5,8 +5,8 @@ import org.apache.calcite.rel.RelVisitor;
 import org.apache.calcite.rel.core.*;
 import org.apache.calcite.rex.RexCall;
 import org.apache.calcite.rex.RexNode;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.util.List;
 
 public class RelAlgToSpark {
@@ -44,7 +44,7 @@ public class RelAlgToSpark {
                     TableScan.put("type","TableScan");
                     TableScan.put("TableName",name);
                     TableScan.put("id",String.valueOf(node.getId()));
-                    operations.add(TableScan);
+                    operations.put(TableScan);
 
                     /*System.out.println("scan");
                     System.out.println(counter);
@@ -64,14 +64,15 @@ public class RelAlgToSpark {
                     Project.put("type","Project");
                     Project.put("id",String.valueOf(node.getId()));
                     JSONArray colIDs = new JSONArray();
-                    List<RexNode> childExps2 = projnode2.getChildExps();
+                    //List<RexNode> childExps2 = projnode2.getChildExps();
+                    List<RexNode> childExps2 = projnode2.getProjects();
                     for (RexNode r : childExps2){
                         //System.out.println(r.toString());
-                        colIDs.add(r.toString().replace("$",""));
+                        colIDs.put(r.toString().replace("$",""));
                     }
                     Project.put("colIDs",colIDs);
                     Project.put("id_a",String.valueOf(projnode2.getInput().getId()));
-                    operations.add(Project);
+                    operations.put(Project);
 
                     //System.out.println(node.);
                 }
@@ -91,7 +92,7 @@ public class RelAlgToSpark {
                     Filter.put("colID",operands.get(0).toString().replace("$", ""));
                     Filter.put("conditionVal",operands.get(1).toString().split(":")[0]);
                     Filter.put("id_a",String.valueOf(filter.getInput().getId()));
-                    operations.add(Filter);
+                    operations.put(Filter);
                 }
 
                 if (node instanceof Join) {
@@ -117,7 +118,7 @@ public class RelAlgToSpark {
                     String joinIDright = String.valueOf(join.getRight().getRowType().getFieldNames().indexOf(nameRight));
                     Join.put("colIDLeft",joinIDleft);
                     Join.put("colIDRight",joinIDright);
-                    operations.add(Join);
+                    operations.put(Join);
 
 
                 }
@@ -125,7 +126,8 @@ public class RelAlgToSpark {
                 if (node instanceof Sort) {
                     //System.out.println("sort");
                     Sort sortNode = (Sort) node;
-                    int sortKey = Integer.parseInt(sortNode.getChildExps().get(0).toString().replace("$", ""));
+                    //int sortKey = Integer.parseInt(sortNode.getChildExps().get(0).toString().replace("$", ""));
+                    int sortKey = Integer.parseInt(sortNode.getSortExps().get(0).toString().replace("$", ""));
                     int posStart=sortNode.toString().indexOf("dir0")+5;
                     String order = sortNode.toString().substring(posStart,sortNode.toString().length()-1);
 
@@ -135,7 +137,7 @@ public class RelAlgToSpark {
                     Sort.put("sortKey",String.valueOf(sortKey));
                     Sort.put("order",order);
                     Sort.put("id_a",String.valueOf(sortNode.getInput().getId()));
-                    operations.add(Sort);
+                    operations.put(Sort);
 
 
                 }

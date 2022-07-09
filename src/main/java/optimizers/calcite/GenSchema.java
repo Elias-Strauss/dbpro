@@ -1,15 +1,15 @@
 package optimizers.calcite;
 
-import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 import org.apache.calcite.sql.type.SqlTypeName;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import scala.reflect.internal.Trees;
 
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class GenSchema extends AbstractSchema {
@@ -22,22 +22,21 @@ public class GenSchema extends AbstractSchema {
         this.tableMap = tableMap;
     }
 
-    public GenSchema(String fileLocation) {
-        JSONParser parser = new JSONParser();
-        String tmpName = null;
+    public GenSchema(String fileLocation) throws IOException {
+        //JSONParser parser = new JSONParser();
+        String tmpName;
         Map<String, Table> tmpTableMap = new HashMap<>();
 
         try {
-            Reader reader = new FileReader(fileLocation);
+            Path filePath = Path.of(fileLocation);
+            String jsonContent = Files.readString(filePath);
 
-            JSONObject schema = (JSONObject) parser.parse(reader);
+            JSONObject schema = new JSONObject(jsonContent);
             JSONArray Tables = (JSONArray) schema.get("Tables");
 
             tmpName = schema.get("SchemaName").toString();
 
-            Tables.stream()
-                    .filter(JSONObject.class::isInstance)
-                    .forEach(ObjectTable -> {
+            Tables.forEach(ObjectTable -> {
                         JSONObject Table = (JSONObject) ObjectTable;
 
                         String genTableName;
@@ -59,7 +58,9 @@ public class GenSchema extends AbstractSchema {
                     });
 
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println(e.getMessage());
+            throw e;
+
         }
 
         this.name = tmpName;

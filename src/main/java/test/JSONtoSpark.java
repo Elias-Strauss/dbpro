@@ -1,16 +1,16 @@
-package calcite.test;
+package test;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import org.apache.spark.api.java.function.PairFunction;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import scala.Tuple2;
 
 public class JSONtoSpark {
@@ -30,10 +30,11 @@ public class JSONtoSpark {
 
     public JavaRDD<String> translate(){
 
-        JSONParser parser = new JSONParser();
         try {
-            Object obj = parser.parse(new FileReader("src/main/resources/output.json"));
-            JSONArray jsonArray = (JSONArray) obj;
+            Path filePath = Path.of("src/main/resources/output.json");
+            String jsonContent = Files.readString(filePath);
+
+            JSONArray jsonArray = new JSONArray(jsonContent);
             System.out.println(jsonArray);
             JSONObject fst = (JSONObject) jsonArray.get(8);
             System.out.println(fst);
@@ -92,16 +93,13 @@ public class JSONtoSpark {
                         JavaRDD<String> output = input.filter(x-> {
                             String[] cols = x.split(",");
                             if (condition.equals(">")){
-                                if(Float.valueOf(cols[colID])>conditionVal) return true;
-                                else return false;
+                                return Float.parseFloat(cols[colID]) > conditionVal;
                             }
                             if (condition.equals("<")){
-                                if(Float.valueOf(cols[colID])<conditionVal) return true;
-                                else return false;
+                                return Float.parseFloat(cols[colID]) < conditionVal;
                             }
                             if (condition.equals("=")){
-                                if(Float.valueOf(cols[colID])==conditionVal) return true;
-                                else return false;
+                                return Float.parseFloat(cols[colID]) == conditionVal;
                             }
                             return false;
                         });

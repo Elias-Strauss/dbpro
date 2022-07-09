@@ -1,4 +1,4 @@
-package calcite.test;
+package test;
 
 import org.apache.calcite.rel.RelWriter;
 import org.apache.calcite.rel.externalize.RelWriterImpl;
@@ -26,8 +26,8 @@ import javax.sql.DataSource;
 import org.apache.calcite.adapter.jdbc.JdbcSchema;
 
 import org.apache.calcite.plan.RelOptUtil;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 // Ovaj SQL upit radi: 'SELECT * FROM multidb."medinfo"'
 
@@ -91,10 +91,10 @@ public class Sql2Rel
         JSONArray outputInversed = new JSONArray();
         for (Object o : output){
             JSONObject temp = (JSONObject) o;
-            outputInversed.add(0,temp);
+            outputInversed.put(0,temp);
         }
         FileWriter file = new FileWriter("src/main/resources/output.json");
-        file.write(outputInversed.toJSONString());
+        file.write(outputInversed.toString());
         file.close();
     }
 }
