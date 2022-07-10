@@ -3,7 +3,8 @@ package test;
 import org.apache.spark.api.java.JavaRDD;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SparkTest_v2 {
 
@@ -18,11 +19,24 @@ public class SparkTest_v2 {
         int totalLength = lineLengths.reduce((a, b) -> a + b);
         System.out.println(lines.collect());*/
         JSONtoSpark_v2 temp = new JSONtoSpark_v2();
-        JavaRDD<ArrayList<Object>> result = temp.translate();
+        ArrayList<Integer> mili = new ArrayList<>();
+        for (int i = 0; i < 15; i++){
+            JavaRDD<ArrayList<Object>> result = temp.translate();
 
-        System.out.println("------------------------------------------------\n");
-        result.take(10).forEach(System.out::println);
-        System.out.println("\n------------------------------------------------");
+            System.out.println("------------------------------------------------\n");
+            result.take(10).forEach(System.out::println);
+            System.out.println("\n------------------------------------------------");
+
+            System.out.println(temp.stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            mili.add((int) temp.stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            temp.stopwatch.reset();
+        }
+
+        AtomicInteger all = new AtomicInteger();
+        mili.forEach(m -> {
+            all.set(m + all.get());
+        });
+        System.out.println(all.get() / 10);
 //        SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
 //        JavaSparkContext sc = new JavaSparkContext(conf);
 //        JavaRDD<String> rdd = sc.textFile("src/main/resources/TPC-HTestDaten/part.tbl");

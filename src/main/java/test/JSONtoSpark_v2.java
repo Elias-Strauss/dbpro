@@ -1,5 +1,6 @@
 package test;
 
+import com.google.common.base.Stopwatch;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -23,6 +24,7 @@ public class JSONtoSpark_v2 implements Serializable {
 
     SparkConf conf;
     JavaSparkContext sc;
+    public Stopwatch stopwatch = Stopwatch.createUnstarted();
     Map<Integer,JavaRDD<String>> rddplusID;
     PairFunction<String, String, String> keyDataLeft;
     public JSONtoSpark_v2() {
@@ -53,6 +55,7 @@ public class JSONtoSpark_v2 implements Serializable {
             //System.out.println(fst);
 
             //JavaRDD<ArrayList<Object>> returnRdd = null;
+            this.stopwatch.start();
             JavaRDD<ArrayList<Object>> returnRdd = null;
 
             CQuery cQuery = new CQuery(jsonArray);
@@ -275,7 +278,6 @@ public class JSONtoSpark_v2 implements Serializable {
 
                         break;
                     case "Aggregate":
-                        System.out.println(type);
                         //C0 -> c5
                         //(c4,c5),(C0 -> c5)
                         //-> (c4, c5),(aggre_cols)
