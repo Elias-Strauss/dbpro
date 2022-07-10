@@ -4,12 +4,15 @@ import optimizers.calcite.GenSchema;
 import optimizers.calcite.SqlQueryParser;
 import optimizers.calcite.GenTable;
 import optimizers.calcite.GenTableStatistic;
+import org.apache.calcite.adapter.enumerable.EnumerableConvention;
+import org.apache.calcite.adapter.enumerable.EnumerableRules;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.config.CalciteConnectionConfig;
 import org.apache.calcite.config.CalciteConnectionConfigImpl;
 import org.apache.calcite.config.CalciteConnectionProperty;
 import org.apache.calcite.jdbc.CalciteSchema;
 import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import org.apache.calcite.linq4j.EnumerableDefaults;
 import org.apache.calcite.plan.*;
 import org.apache.calcite.plan.hep.HepPlanner;
 import org.apache.calcite.plan.hep.HepProgram;
@@ -17,6 +20,7 @@ import org.apache.calcite.plan.hep.HepProgramBuilder;
 import org.apache.calcite.plan.volcano.VolcanoPlanner;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.prepare.Prepare;
+import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.RelRoot;
 import org.apache.calcite.rel.rules.CoreRules;
 import org.apache.calcite.rel.rules.FilterJoinRule;
@@ -72,12 +76,12 @@ public class CalciteCSVTest {
 
         GenSchema schema = new GenSchema("src/main/resources/TPC-HTestDaten/CalciteSchema.json");
 
-        GenTable actorTable = new GenTable(
-                "lineitem",
-                List.of("orderkey", "partkey", "suppkey", "linenumber", "quantity", "extendedprice", "discount", "tax", "returnflag", "linestatus", "shipdate", "commitdate", "receipdate", "shipinstruct", "shipmode", "comment"),
-                List.of(SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.CHAR),
-                new GenTableStatistic(200));
-        GenSchema test = new GenSchema("Test", Map.of("lineitem", actorTable));
+//        GenTable actorTable = new GenTable(
+//                "lineitem",
+//                List.of("orderkey", "partkey", "suppkey", "linenumber", "quantity", "extendedprice", "discount", "tax", "returnflag", "linestatus", "shipdate", "commitdate", "receipdate", "shipinstruct", "shipmode", "comment"),
+//                List.of(SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.INTEGER, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.DECIMAL, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.DATE, SqlTypeName.CHAR, SqlTypeName.CHAR, SqlTypeName.CHAR),
+//                new GenTableStatistic(200));
+//        GenSchema test = new GenSchema("Test", Map.of("lineitem", actorTable));
 
         CalciteSchema rootSchema = CalciteSchema.createRootSchema(false, false);
         rootSchema.add(schema.getSchemaName(), schema);
@@ -104,26 +108,26 @@ public class CalciteCSVTest {
 
 
         String query = "select\n" +
-                "        returnflag,\n" +
-                "        linestatus,\n" +
-                "        sum(quantity) as sum_qty,\n" +
-                "        sum(extendedprice) as sum_base_price,\n" +
-                "        sum(extendedprice * (1 - discount)) as sum_disc_price,\n" +
-                "        sum(extendedprice * (1 - discount) * (1 + tax)) as sum_charge,\n" +
-                "        avg(quantity) as avg_qty,\n" +
-                "        avg(extendedprice) as avg_price,\n" +
-                "        avg(discount) as avg_disc,\n" +
-                "        count(*) as count_order\n" +
+        "\tl_returnflag,\n" +
+                "\tl_linestatus,\n" +
+                "\tsum(l_quantity) as sum_qty,\n" +
+                "\tsum(l_extendedprice) as sum_base_price,\n" +
+                "\tsum(l_extendedprice * (1 - l_discount)) as sum_disc_price,\n" +
+                "\tsum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,\n" +
+                "\tavg(l_quantity) as avg_qty,\n" +
+                "\tavg(l_extendedprice) as avg_price,\n" +
+                "\tavg(l_discount) as avg_disc,\n" +
+                "\tcount(*) as count_order\n" +
                 "from\n" +
-                "        lineitem\n" +
+                "\tlineitem\n" +
                 "where\n" +
-                "        shipdate <= date '1998-12-01' - interval '90' day\n" +
+                "\tl_shipdate <= date '1998-12-01' - interval '90' day\n" +
                 "group by\n" +
-                "        returnflag,\n" +
-                "        linestatus\n" +
+                "\tl_returnflag,\n" +
+                "\tl_linestatus\n" +
                 "order by\n" +
-                "        returnflag,\n" +
-                "        linestatus";
+                "\tl_returnflag,\n" +
+                "\tl_linestatus";
 
         System.out.println("\u001B[31m" + "------------SQL input------------" + "\u001B[0m");
         System.out.println(query);
@@ -143,6 +147,7 @@ public class CalciteCSVTest {
                 .addRuleInstance(ProjectFilterTransposeRule.Config.DEFAULT.toRule())
                 .addRuleInstance(ProjectJoinTransposeRule.Config.DEFAULT.toRule())
                 .addRuleInstance(FilterJoinRule.FilterIntoJoinRule.FilterIntoJoinRuleConfig.DEFAULT.toRule())
+                .addRuleCollection(EnumerableRules.rules())
                 .build();
 
         HepPlanner hepPlanner = new HepPlanner(hepProgram);
@@ -174,10 +179,18 @@ public class CalciteCSVTest {
                 ));
 
         hepPlanner.setRoot(root.rel);
+
+
         System.out.println("\n" + "\u001B[31m" + "------------Relational pLan------------" + "\u001B[0m");
         System.out.println(root.rel.explain());
         System.out.println("\u001B[31m" + "------------Optimized plan------------" + "\u001B[0m");
+        RelNode test = hepPlanner.findBestExp();
+        System.out.println(test.explain());
+        hepPlanner.changeTraits(test, test.getTraitSet().plus(EnumerableConvention.INSTANCE));
+
         System.out.println(hepPlanner.findBestExp().explain());
+
+
 
 //        program.run(
 //                planner,

@@ -2,6 +2,7 @@ package test;
 
 import org.apache.spark.api.java.JavaRDD;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SparkTest_v2 {
@@ -17,10 +18,10 @@ public class SparkTest_v2 {
         int totalLength = lineLengths.reduce((a, b) -> a + b);
         System.out.println(lines.collect());*/
         JSONtoSpark_v2 temp = new JSONtoSpark_v2();
-        JavaRDD<String[]> result = temp.translate();
+        JavaRDD<ArrayList<Object>> result = temp.translate();
 
         System.out.println("------------------------------------------------\n");
-        System.out.println(Arrays.toString(result.first()));
+        result.take(10).forEach(System.out::println);
         System.out.println("\n------------------------------------------------");
 //        SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
 //        JavaSparkContext sc = new JavaSparkContext(conf);

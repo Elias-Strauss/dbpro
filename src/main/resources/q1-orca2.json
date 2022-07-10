@@ -1,0 +1,154 @@
+[
+    {
+        "id": "5",
+        "type": "TableScan",
+        "name": "lineitem"
+    },
+    {
+        "id": "4",
+        "type": "Filter",
+        "id_a": "5",
+        "cond": [{
+                "valueType":"Date",
+                "comp_op": "<=",
+                "left": {
+                  "colID": "10"
+                },
+                "right": {
+                  "value": "1998-09-02"
+                }
+            }
+        ]
+    },
+  {
+    "id": "3",
+    "type": "Projection",
+    "id_a": "4",
+    "colIDs": [
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      {
+        "operator": "*",
+        "left": {
+          "colID": "5"
+        },
+        "right": {
+          "operator": "-",
+          "left": {
+            "value": "1.000000"
+          },
+          "right": {
+            "colID": "6"
+          }
+        }
+      },
+      {
+        "operator": "*",
+        "left": {
+          "operator": "*",
+          "left": {
+            "colID": "5"
+          },
+          "right": {
+            "operator": "-",
+            "left": {
+              "value": "1.000000"
+            },
+            "right": {
+              "colID": "6"
+            }
+          }
+        },
+        "right": {
+          "operator": "+",
+          "left": {
+            "value": "1.000000"
+          },
+          "right": {
+            "colID": "7"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "type": "Aggregate",
+    "agg_strat": "Sorted",
+    "grouping_colIDs": [
+      "4",
+      "5"
+    ],
+    "agg_colIDs": [
+      {
+        "type": "sum",
+        "colID": "0"
+      },
+      {
+        "type": "sum",
+        "colID": "1"
+      },
+      {
+        "type": "sum",
+        "colID": "6"
+      },
+      {
+        "type": "sum",
+        "colID": "7"
+      },
+      {
+        "type": "average",
+        "colID": "0"
+      },
+      {
+        "type": "average",
+        "colID": "1"
+      },
+      {
+        "type": "average",
+        "colID": "2"
+      },
+      {
+        "type": "count",
+        "colID": "*"
+      }
+    ],
+    "id_a": "3"
+  },
+  {
+    "id": "1",
+    "type": "Projection",
+    "id_a": "2",
+    "colIDs": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ]
+  },
+  {
+    "id": "0",
+    "type": "Sort",
+    "sorting_colIDs": [
+      {
+        "colID": "0",
+        "sort_operator": "<"
+      },
+      {
+        "colID": "1",
+        "sort_operator": "<"
+      }
+    ],
+    "id_a": "1"
+  }
+]
