@@ -1,6 +1,8 @@
 package test;
 
 import optimizers.calcite.CalciteOptimizer;
+import org.apache.calcite.rel.RelNode;
+import org.apache.calcite.rel.core.Sort;
 import org.apache.calcite.sql.parser.SqlParseException;
 
 import java.io.IOException;
@@ -34,6 +36,18 @@ public class CalciteSparkTest {
 
         CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
 
-        System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
+        RelNode optimized = calciteOptimizer.optimizeQuery(sqlQuery);
+
+        Sort sort = (Sort) optimized;
+
+        sort.getSortExps().forEach(exp -> {
+            System.out.println(exp);
+        });
+
+        sort.collation.getFieldCollations().forEach(scol -> {
+            System.out.println(scol.direction.toString());
+        });
+
+        System.out.println(optimized.explain());
     }
 }

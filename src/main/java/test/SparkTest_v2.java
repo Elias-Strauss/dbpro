@@ -20,7 +20,7 @@ public class SparkTest_v2 {
         System.out.println(lines.collect());*/
         JSONtoSpark_v2 temp = new JSONtoSpark_v2();
         ArrayList<Integer> mili = new ArrayList<>();
-        for (int i = 0; i < 15; i++){
+        for (int i = 0; i < 1; i++){
             JavaRDD<ArrayList<Object>> result = temp.translate();
 
             System.out.println("------------------------------------------------\n");
@@ -36,7 +36,7 @@ public class SparkTest_v2 {
         mili.forEach(m -> {
             all.set(m + all.get());
         });
-        System.out.println(all.get() / 10);
+        System.out.println(all.get() / 1);
 //        SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
 //        JavaSparkContext sc = new JavaSparkContext(conf);
 //        JavaRDD<String> rdd = sc.textFile("src/main/resources/TPC-HTestDaten/part.tbl");

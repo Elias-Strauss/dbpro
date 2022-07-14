@@ -1,6 +1,7 @@
 package main;
 
 import optimizers.calcite.CalciteOptimizer;
+import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -42,7 +43,8 @@ public class ConsoleProgram {
 
                 CalciteOptimizer calciteOptimizer = new CalciteOptimizer(schemaPath);
 
-                System.out.println(calciteOptimizer.optimizeQuery(sqlQuery).explain());
+                RelNode optimizedPlan = calciteOptimizer.optimizeQuery(sqlQuery);
+                System.out.println(optimizedPlan.explain());
 
             } else if (input.startsWith("run tpc-h")) {
                 AtomicInteger queryNumber = new AtomicInteger(-1);
