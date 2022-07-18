@@ -1,14 +1,18 @@
 package test;
 
+import execution_engines.JSONtoSpark_v2;
 import org.apache.spark.api.java.JavaRDD;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SparkTest_v2 {
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws IOException {
         /*SparkConf conf = new SparkConf().setAppName("TestApp").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
@@ -18,10 +22,12 @@ public class SparkTest_v2 {
         JavaRDD<Integer> lineLengths = lines.map(s -> s.length());
         int totalLength = lineLengths.reduce((a, b) -> a + b);
         System.out.println(lines.collect());*/
+        Path filePath = Path.of("src/main/resources/q1-orca2.json");
+        String jsonContent = Files.readString(filePath);
         JSONtoSpark_v2 temp = new JSONtoSpark_v2();
         ArrayList<Integer> mili = new ArrayList<>();
         for (int i = 0; i < 1; i++){
-            JavaRDD<ArrayList<Object>> result = temp.translate();
+            JavaRDD<ArrayList<Object>> result = temp.translate(jsonContent);
 
             System.out.println("------------------------------------------------\n");
             result.take(10).forEach(System.out::println);

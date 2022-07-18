@@ -194,14 +194,14 @@ def grouping_columns(node, pre):
 def sorting_cols(node):
     list = []
     for n in node:
-        list.append({"col_id" : n.attrib["ColId"], "sort_operator" : n.attrib["SortOperatorName"]})
+        list.append({"colID" : n.attrib["ColId"], "sort_operator" : n.attrib["SortOperatorName"]})
     return list
 
 #not really used, needed for redistribute, broadcast, which are not used currently
 def hash_exprs(node):
     list = []
     for n in node:
-        list.append({"col_id" : n[0].attrib["ColId"]})
+        list.append({"colID" : n[0].attrib["ColId"]})
     return list
 
 #returns the logical plan from the minidump file
@@ -323,6 +323,6 @@ for c in file2:
         end = i
     i += 1
 #stores the result in JSON
-with open("dxl_parser_result/"+ file2[last+1:end] + '.json', 'w', encoding='utf-8') as f:
-    json.dump(result, f, ensure_ascii=False, indent=4)
-print("results written to: ./dxl_parser_result/" + file2[last+1:end] + '.json')
+# with open("dxl_parser_result/"+ file2[last+1:end] + '.json', 'w', encoding='utf-8') as f:
+#     json.dump(result, f, ensure_ascii=False, indent=4)
+# print("results written to: ./dxl_parser_result/" + file2[last+1:end] + '.json')

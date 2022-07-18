@@ -1,4 +1,4 @@
-package test;
+package execution_engines;
 
 import com.google.common.base.Stopwatch;
 import org.apache.spark.SparkConf;
@@ -19,43 +19,26 @@ import scala.Tuple2;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import test.CQuery;
 
 public class JSONtoSpark_v2 implements Serializable {
 
     SparkConf conf;
     JavaSparkContext sc;
     public Stopwatch stopwatch = Stopwatch.createUnstarted();
-    Map<Integer,JavaRDD<String>> rddplusID;
-    PairFunction<String, String, String> keyDataLeft;
     public JSONtoSpark_v2() {
         this.conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
         this.sc = new JavaSparkContext(this.conf);
         sc.setLogLevel("ERROR");
-        this.rddplusID = new HashMap<>();
-        this.keyDataLeft = new PairFunction<String, String, String>() {
-            @Override
-            public Tuple2<String, String> call(String s) throws Exception {
-                //String[] cols = s.split(",");
-                //return new Tuple2(cols[colIDLeft],s);
-                return null;
-            }
-        };
     }
 
 
-    public JavaRDD<ArrayList<Object>> translate(){
+    public JavaRDD<ArrayList<Object>> translate(String jsonString){
 
         try {
-            Path filePath = Path.of("src/main/resources/q1-orca2.json");
-            String jsonContent = Files.readString(filePath);
+            JSONArray jsonArray = JSONArray.parseArray(jsonString);
 
-            JSONArray jsonArray = JSONArray.parseArray(jsonContent);
-            //System.out.println(jsonArray);
-            //JSONObject fst = (JSONObject) jsonArray.get(8);
-            //System.out.println(fst);
-
-            //JavaRDD<ArrayList<Object>> returnRdd = null;
-            this.stopwatch.start();
+            //this.stopwatch.start();
             JavaRDD<ArrayList<Object>> returnRdd = null;
 
             CQuery cQuery = new CQuery(jsonArray);
@@ -72,19 +55,10 @@ public class JSONtoSpark_v2 implements Serializable {
 
                 switch (type) {
                     case "TableScan":
-                        //JavaRDD<String> distFile = sc.textFile("src/main/resources/TPC-HTestDaten/part.tbl");
-                        //rddplusID.put(id,distFile);
                         //TODO: get proper Table
                         returnRdd = sc.textFile("src/main/resources/TPC-HTestDaten/" + current.getString("name") + ".tbl")
                                 .map(row -> new ArrayList<>(Arrays.asList(row.split("\\|"))));
-                        //System.out.println(distFile.collect());
-//                        String[] splitRow = row.split("\\|");
-//                        for (int i = 0; i < splitRow.length; i++) {
-//.map(row -> {
-//                                    row = row.split("\\|");
-//                                });
-//                        }
-                        //return null;
+
                     break;
 
                     case "TableModify":
@@ -109,26 +83,6 @@ public class JSONtoSpark_v2 implements Serializable {
                             }
                             return newRow;
                         });
-                        //for now no commas allowed in the fields
-//                        int idInput = Integer.parseInt((String) current.get("id_a"));
-//                        JavaRDD<String> input = rddplusID.get(idInput);
-//                        if (input != null){
-//                            JSONArray colIDs = (JSONArray) current.get("colIDs");
-//                            //System.out.println(colIDs);
-//                            //System.out.println(input.collect());
-//                            JavaRDD<String> output = input.map(x-> {
-//                                String output2 = "";
-//                                String[] cols = x.split(",");
-//                                for(Object o2 : colIDs){
-//                                    String colID = (String) o2;
-//                                    if (output2.equals(""))output2=cols[Integer.parseInt(colID)];
-//                                    else output2=output2+","+cols[Integer.parseInt(colID)];
-//                                }
-//                                return output2;
-//                            });
-                        //System.out.println(output.collect());
-                        //rddplusID.put(id, output);
-                        //System.out.println(rddplusID);
 
                         break;
 
@@ -173,77 +127,15 @@ public class JSONtoSpark_v2 implements Serializable {
                             });
                             return result[0];
                         });
-//                        int id = Integer.parseInt((String) current.get("id"));
-//                        int idInput = Integer.parseInt((String) current.get("id_a"));
-//                        int colID = Integer.parseInt((String) current.get("colID"));
-//                        int conditionVal = Integer.parseInt((String) current.get("conditionVal"));
-//                        String condition = (String)current.get("condition");
-//
-//
-//                        JavaRDD<String> input = rddplusID.get(idInput);
-//                        if (input != null){
-//                            //System.out.println(input.collect());
-//                            JavaRDD<String> output = input.filter(x-> {
-//                                String[] cols = x.split(",");
-//                                switch(condition){
-//                                    case ">":
-//                                        return Float.parseFloat(cols[colID]) > conditionVal;
-//                                    case "<":
-//                                        return Float.parseFloat(cols[colID]) < conditionVal;
-//                                    case "=":
-//                                        return Float.parseFloat(cols[colID]) == conditionVal;
-//                                }
-//                                return false;
-//                            });
-//                            //System.out.println(output.collect());
-//                            rddplusID.put(id,output);
-//                            //System.out.println(rddplusID);
-//                        }
+
                         break;
 
                     case "Join":
-//                        String joinType = (String) current.get("joinType");
-//                        if (joinType.equals("INNER")){
-//                            int id = Integer.parseInt((String) current.get("id"));
-//                            int idLeft = Integer.parseInt((String) current.get("id_a"));
-//                            int idRight = Integer.parseInt((String) current.get("id_b"));
-//                            int colIDLeft = Integer.parseInt((String) current.get("colIDLeft"));
-//                            int colIDRight = Integer.parseInt((String) current.get("colIDRight"));
-//                            JavaRDD<String> inputLeft = rddplusID.get(idLeft);
-//                            System.out.println(inputLeft.collect());
-//                            JavaRDD<String> inputRight = rddplusID.get(idRight);
-//                            System.out.println(inputRight.collect());
-//                            JavaPairRDD<String,String> pairsLeft = TupleSerializable.tupleHelper(inputLeft,colIDLeft);
-//                            JavaPairRDD<String,String> pairsRight = TupleSerializable.tupleHelper(inputRight,colIDRight);
-//
-//                        /*System.out.println(colIDLeft);
-//                        System.out.println(colIDRight);
-//                        System.out.println(pairsLeft.collect());
-//                        System.out.println(pairsRight.collect());*/
-//                            //System.out.println(inputLeft.collect());
-//                            JavaRDD<String> output = pairsLeft.join(pairsRight).values().map(x->x._1+","+x._2);
-//                            System.out.println(output.collect());
-//                            rddplusID.put(id,output);
-//
-//                        }else{
-//                            System.out.println("panikjoinnotinner");
-//                        }
+
                         break;
 
                     case "Sort":
-//                        int id = Integer.parseInt((String) current.get("id"));
-//                        int idInput = Integer.parseInt((String) current.get("id_a"));
-//                        int colID = Integer.parseInt((String) current.get("sortKey"));
-//                        String order = (String) current.get("order");
-//                        boolean ordBool = false;
-//                        if (order.equals("ASC")) ordBool=true;
-//                        JavaRDD<String> input = rddplusID.get(idInput);
-//                        if (input!=null) {
-//                            JavaPairRDD<String, String> pair = TupleSerializable.tupleHelper(input, colID);
-//                            //System.out.println(pair.sortByKey(ordBool).values());
-//                            JavaRDD<String> output = pair.sortByKey(ordBool).values();
-//                            rddplusID.put(id,output);
-//                        }
+
                         assert returnRdd != null;
                         JavaPairRDD<String, ArrayList<Object>> pairRDDS = JavaPairRDD.fromJavaRDD(
                                 returnRdd.map(row -> {
@@ -263,7 +155,6 @@ public class JSONtoSpark_v2 implements Serializable {
 
                         returnRdd = pairRDDS.map(row -> {
                             ArrayList<Object> newRow = new ArrayList<Object>();
-                            //newRow.add(row._1);
                             row._2.forEach(rObj -> {
                                 if (rObj.getClass().equals(Object[].class)) {
                                     //is average
@@ -388,17 +279,11 @@ public class JSONtoSpark_v2 implements Serializable {
                 }
 
             return returnRdd;
-            /*Iterator iterator = subjects.iterator();
-            while (iterator.hasNext()) {
-                System.out.println(iterator.next());
-            }*/
+
         } catch(Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
-        //JavaRDD<String> distFile = sc.textFile("src/main/resources/"+"output"+".json");
-
 
     }
 
@@ -422,16 +307,5 @@ public class JSONtoSpark_v2 implements Serializable {
             return 0.0;
         }
     }
-
-    /*public JavaPairRDD<String,String> tupleHelper (JavaRDD<String> rdd, int colID){
-        return rdd.mapToPair(new PairFunction<String, String, String>() {
-            @Override
-            public Tuple2<String, String> call(String s) throws Exception {
-                String[] cols = s.split(",");
-                return new Tuple2(cols[colID],s);
-            }
-        });
-
-    }*/
 
 }
