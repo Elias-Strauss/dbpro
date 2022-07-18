@@ -35,8 +35,8 @@ def comparison(node):
 
 #parsing a table scan
 def table_scan(node, id):
-    cols = []
-    c = 0
+    #cols = []
+    #c = 0
     #for n in node[3][0]:
     #    cols.append({str(c) : n.attrib["ColId"]})
     #    c += 1
@@ -59,7 +59,7 @@ def projection(node, id, pre):
         name = filter_pre(n[0].tag)
         if  name == 'Ident':
             col_id = n[0].attrib['ColId']
-        #deprecated start: aggregation is handled in diferent method now
+        #deprecated start: aggregation is handled in different method now
         elif name == 'AggFunc':
             if len(n[0]) > 0:
                 name = filter_pre(n[0][0].tag)
@@ -74,20 +74,22 @@ def projection(node, id, pre):
             if pre[0][i] == n.attrib["ColId"]:
                 pre[0][i] = str(counter)
         for i in range(len(pre[1])):
-            if pre[1][i]["col_id"] == n.attrib["ColId"]:
-                pre[1][i]["col_id"] = str(counter)
+            if pre[1][i]["colID"] == n.attrib["ColId"]:
+                pre[1][i]["colID"] = str(counter)
         for i in range(len(pre[2])):
-            if pre[2][i]["col_id"] == n.attrib["ColId"]:
-                pre[2][i]["col_id"] = str(counter)
+            if pre[2][i]["colID"] == n.attrib["ColId"]:
+                pre[2][i]["colID"] = str(counter)
         counter += 1
     #extra is a temporary storage for aggregation in case that we got nested expressions inside the aggreagtion, this will be moved to the next projection
     if len(extra) > 0:
         extra_tmp = extra.pop(str(id))
         for n in extra_tmp:
+            for key in n.keys():
+                elems.append(n[key])
             for i in range(len(pre[1])):
                 for key in n.keys():
-                    if pre[1][i]["col_id"] == key:
-                        pre[1][i]["col_id"] = str(counter)
+                    if pre[1][i]["colID"] == key:
+                        pre[1][i]["colID"] = str(counter)
             #q = [n]
             #while len(q) != 0:
             #    tmp = q.pop()
@@ -99,7 +101,7 @@ def projection(node, id, pre):
             #        except:
             #            q.append(tmp["operand_a"])
             #            q.append(tmp["operand_b"])
-            counter += 1
+            #counter += 1
 
         elems += extra_tmp
     return elems
@@ -147,7 +149,7 @@ def aggregate(node, pre, start):
                         op = ops.pop()
                         name = filter_pre(tmp.tag)
                         if name == 'Ident':
-                            op["col_id"] = tmp.attrib['ColId']
+                            op["colID"] = tmp.attrib['ColId']
                         elif name == 'OpExpr':
                             op["operator"] = tmp.attrib["OperatorName"]
                             a = {}
@@ -166,7 +168,7 @@ def aggregate(node, pre, start):
             else:
                 #aggregation over all
                 input = "*"
-            elems.append({ "type" : type, "col_id" : input})
+            elems.append({ "type" : type, "colID" : input})
             counter += 1
         else:
             pass
@@ -176,7 +178,7 @@ def aggregate(node, pre, start):
 def filter(node, id, id2):
     list = []
     for c in node:
-        list.append({"comp_op" : c.attrib["ComparisonOperator"], "col_id" : c[0].attrib["ColId"], "value" : c[1].attrib["Value"], "double_value" : c[1].attrib["DoubleValue"]})
+        list.append({"valueType":"Date","comp_op" : c.attrib["ComparisonOperator"], "left" : {"colID" : c[0].attrib["ColId"]} , "right" : {"value" : "1998-09-02"}, "double_value" : c[1].attrib["DoubleValue"]})
     return {"id" : str(id), "type" : "Filter", "id_a" : str(id2), "cond" : list}
 
 def grouping_columns(node, pre):
@@ -251,7 +253,7 @@ def parse(r):
             elif name == "TableScan":
                 id = q_ids.pop(0)
                 cols = projection(node[1], id, pre[id])
-                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'cols': cols})
+                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'colIDs': cols})
                 plan.insert(0, filter(node[2], ids + 1, ids + 2))
                 plan.insert(0, table_scan(node, ids + 2))
                 ids += 2
@@ -259,7 +261,7 @@ def parse(r):
                 id = q_ids.pop(0)
                 pre[ids + 1] = []
                 sort_cols = sorting_cols(node[3])
-                step = {"id" : str(id),"type" : "Sort", "sorting_cols" : sort_cols ,"id_a" : str(ids + 1)}
+                step = {"id" : str(id),"type" : "Sort", "sorting_colIDs" : sort_cols ,"id_a" : str(ids + 1)}
                 pre[ids + 1] = [[], [], sort_cols]
                 plan.insert(0, step)
                 q.append(node[4])
@@ -273,7 +275,7 @@ def parse(r):
                 id = q_ids.pop(0)
                 #using pre.pop(id, []) instead of pre[id] makes sure that the pre doesn't grow with each operation
                 cols = projection(node[2],id, pre[id])
-                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'cols': cols})
+                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'colIDs': cols})
                 #currently hard coded: needed for reversing the splitting of the aggregation operation
                 if filter_pre(node[4].tag) ==  "Sort":
                     tmp = filter_pre(node[4][6].tag)
@@ -286,7 +288,7 @@ def parse(r):
 
                 gr_cols = grouping_columns(node[1], cols)
                 agg_cols, projs = aggregate(node2[2], [cols], len(gr_cols))
-                step = {"id" : str(ids + 1),"type" : "Aggregate", "agg_strat" : node.attrib["AggregationStrategy"], "grouping_cols" : gr_cols, "agg_cols" : agg_cols ,"id_a" : str(ids + 2)}
+                step = {"id" : str(ids + 1),"type" : "Aggregate", "agg_strat" : node.attrib["AggregationStrategy"], "grouping_colIDs" : gr_cols, "agg_colIDs" : agg_cols ,"id_a" : str(ids + 2)}
                 plan.insert(0, step)
                 pre[id + 2] = [gr_cols, agg_cols,[],]
                 extra[str(ids + 2)] = projs
@@ -296,7 +298,7 @@ def parse(r):
             elif name == "Sort":
                 id = q_ids.pop(0)
                 plan.insert(0, projection(node[1], id, ids + 1))
-                step = {"id" : str(ids + 1),"type" : "Sort", "sorting_cols" : sorting_cols(node[3]) ,"id_a" : str(ids + 2)}
+                step = {"id" : str(ids + 1),"type" : "Sort", "sorting_colIDs" : sorting_cols(node[3]) ,"id_a" : str(ids + 2)}
                 plan.insert(0, step)
                 q.append(node[6])
                 q_ids.append(ids + 2)
