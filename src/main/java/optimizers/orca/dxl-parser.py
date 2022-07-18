@@ -30,8 +30,7 @@ def filter_att(dict):
 
 #parsing a comparison
 def comparison(node):
-    step = {"op" : node.attrib["ComparisonOperator"], "col_a" : 
-node[0].attrib["ColId"], "col_b" : node[1].attrib["ColId"]}
+    step = {"op" : node.attrib["ComparisonOperator"], "col_a" : node[0].attrib["ColId"], "col_b" : node[1].attrib["ColId"]}
     return step
 
 #parsing a table scan
@@ -41,10 +40,8 @@ def table_scan(node, id):
     #for n in node[3][0]:
     #    cols.append({str(c) : n.attrib["ColId"]})
     #    c += 1
-    #step = {"id" : str(id), "type" : "TableScan", "name" : 
-node[3].attrib['TableName'], "cols" : cols}
-    step = {"id" : str(id), "type" : "TableScan", "name" : 
-node[3].attrib['TableName']}
+    #step = {"id" : str(id), "type" : "TableScan", "name" : node[3].attrib['TableName'], "cols" : cols}
+    step = {"id" : str(id), "type" : "TableScan", "name" : node[3].attrib['TableName']}
     return step
 
 #parsing a condition
@@ -72,9 +69,7 @@ def projection(node, id, pre):
                 col_id = n.attrib['ColId']
         #deprecated end
         elems.append(col_id)
-        #orca uses global unique columns id instead of ids that tell the 
-postion in relation to the input table, this part maps the global ids to 
-relative ids
+        #orca uses global unique columns id instead of ids that tell the postion in relation to the input table, this part maps the global ids to relative ids
         for i in range(len(pre[0])):
             if pre[0][i] == n.attrib["ColId"]:
                 pre[0][i] = str(counter)
@@ -85,9 +80,7 @@ relative ids
             if pre[2][i]["col_id"] == n.attrib["ColId"]:
                 pre[2][i]["col_id"] = str(counter)
         counter += 1
-    #extra is a temporary storage for aggregation in case that we got 
-nested expressions inside the aggreagtion, this will be moved to the next 
-projection
+    #extra is a temporary storage for aggregation in case that we got nested expressions inside the aggreagtion, this will be moved to the next projection
     if len(extra) > 0:
         extra_tmp = extra.pop(str(id))
         for n in extra_tmp:
@@ -116,14 +109,11 @@ extra = {}
 
 #parsing an aggregation
 def aggregate(node, pre, start):
-    #temporary ids are for nested aggregation, temporary also unique as 
-the normal column ids, 
-    # and also will be overwritten with relativ position ids in the next 
-operation
+    #temporary ids are for nested aggregation, temporary also unique as the normal column ids, 
+    # and also will be overwritten with relativ position ids in the next operation
     global tmp_id
     elems = []
-    #statements stores nested expressions that will be added to next 
-projection
+    #statements stores nested expressions that will be added to next projection
     projections = []
     counter = start
     for n in node:
@@ -148,8 +138,7 @@ projection
                     #easy aggregate over single col
                     input = n[0][0].attrib["ColId"]
                 else:
-                    #nested aggregation over multiple cols / consatnt 
-values
+                    #nested aggregation over multiple cols / consatnt values
                     q = [n[0][0]]
                     proj = {}
                     ops = [proj]
@@ -187,11 +176,8 @@ values
 def filter(node, id, id2):
     list = []
     for c in node:
-        list.append({"comp_op" : c.attrib["ComparisonOperator"], "col_id" 
-: c[0].attrib["ColId"], "value" : c[1].attrib["Value"], "double_value" : 
-c[1].attrib["DoubleValue"]})
-    return {"id" : str(id), "type" : "Filter", "id_a" : str(id2), "cond" : 
-list}
+        list.append({"comp_op" : c.attrib["ComparisonOperator"], "col_id" : c[0].attrib["ColId"], "value" : c[1].attrib["Value"], "double_value" : c[1].attrib["DoubleValue"]})
+    return {"id" : str(id), "type" : "Filter", "id_a" : str(id2), "cond" : list}
 
 def grouping_columns(node, pre):
     list = []
@@ -208,12 +194,10 @@ def grouping_columns(node, pre):
 def sorting_cols(node):
     list = []
     for n in node:
-        list.append({"col_id" : n.attrib["ColId"], "sort_operator" : 
-n.attrib["SortOperatorName"]})
+        list.append({"col_id" : n.attrib["ColId"], "sort_operator" : n.attrib["SortOperatorName"]})
     return list
 
-#not really used, needed for redistribute, broadcast, which are not used 
-currently
+#not really used, needed for redistribute, broadcast, which are not used currently
 def hash_exprs(node):
     list = []
     for n in node:
@@ -237,29 +221,24 @@ def parse(r):
     black_list = ["Properties"]
     #plan will be returned at the end
     plan = []
-    #q_ids is a queue for the operation id_s, q_ids usually increases in 
-size when q increases
+    #q_ids is a queue for the operation id_s, q_ids usually increases in size when q increases
     #alternatively make 1 queue of tuples
     q_ids = [0]
     #counter for operation ids
     ids = 0
-    #temprary storage for the previous col ids, needed because the global 
-unique ids from previous op needs to be mapped to the position in the 
-current "output table"
+    #temprary storage for the previous col ids, needed because the global unique ids from previous op needs to be mapped to the position in the current "output table"
     pre = {0 : []}
     #broad width search trough the tree
     while(len(q) != 0):
         node = q.pop(0)
         name = filter_pre(node.tag)
         if not name in black_list:
-            #currently working cases: TableScan, LogicalGet, HashJoin, 
-GatherMotion, Aggregate, Sort
+            #currently working cases: TableScan, LogicalGet, HashJoin, GatherMotion, Aggregate, Sort
             if name == "HashJoin":
                 id = q_ids.pop(0)
                 #in orca each operation has a projection at the end
                 plan.insert(0,projection(node[1], id, ids + 1))
-                step = {"id" : str(ids + 1),"type" : "Join", "id_a" : 
-str(ids + 2), "id_b" : str(ids + 3), "cond" : condition(node[4])}
+                step = {"id" : str(ids + 1),"type" : "Join", "id_a" : str(ids + 2), "id_b" : str(ids + 3), "cond" : condition(node[4])}
                 #adding the join to output variable
                 plan.insert(0, step)
                 q.append(node[5])
@@ -272,8 +251,7 @@ str(ids + 2), "id_b" : str(ids + 3), "cond" : condition(node[4])}
             elif name == "TableScan":
                 id = q_ids.pop(0)
                 cols = projection(node[1], id, pre[id])
-                plan.insert(0, {"id" : str(id), "type" : "Projection", 
-"id_a" : str(ids + 1) ,'cols': cols})
+                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'cols': cols})
                 plan.insert(0, filter(node[2], ids + 1, ids + 2))
                 plan.insert(0, table_scan(node, ids + 2))
                 ids += 2
@@ -281,8 +259,7 @@ str(ids + 2), "id_b" : str(ids + 3), "cond" : condition(node[4])}
                 id = q_ids.pop(0)
                 pre[ids + 1] = []
                 sort_cols = sorting_cols(node[3])
-                step = {"id" : str(id),"type" : "Sort", "sorting_cols" : 
-sort_cols ,"id_a" : str(ids + 1)}
+                step = {"id" : str(id),"type" : "Sort", "sorting_cols" : sort_cols ,"id_a" : str(ids + 1)}
                 pre[ids + 1] = [[], [], sort_cols]
                 plan.insert(0, step)
                 q.append(node[4])
@@ -294,13 +271,10 @@ sort_cols ,"id_a" : str(ids + 1)}
                 pass
             elif name == "Aggregate":
                 id = q_ids.pop(0)
-                #using pre.pop(id, []) instead of pre[id] makes sure that 
-the pre doesn't grow with each operation
+                #using pre.pop(id, []) instead of pre[id] makes sure that the pre doesn't grow with each operation
                 cols = projection(node[2],id, pre[id])
-                plan.insert(0, {"id" : str(id), "type" : "Projection", 
-"id_a" : str(ids + 1) ,'cols': cols})
-                #currently hard coded: needed for reversing the splitting 
-of the aggregation operation
+                plan.insert(0, {"id" : str(id), "type" : "Projection", "id_a" : str(ids + 1) ,'cols': cols})
+                #currently hard coded: needed for reversing the splitting of the aggregation operation
                 if filter_pre(node[4].tag) ==  "Sort":
                     tmp = filter_pre(node[4][6].tag)
                     if tmp == "RedistributeMotion":
@@ -311,11 +285,8 @@ of the aggregation operation
                                 node2 = node[4][6][5][4]
 
                 gr_cols = grouping_columns(node[1], cols)
-                agg_cols, projs = aggregate(node2[2], [cols], 
-len(gr_cols))
-                step = {"id" : str(ids + 1),"type" : "Aggregate", 
-"agg_strat" : node.attrib["AggregationStrategy"], "grouping_cols" : 
-gr_cols, "agg_cols" : agg_cols ,"id_a" : str(ids + 2)}
+                agg_cols, projs = aggregate(node2[2], [cols], len(gr_cols))
+                step = {"id" : str(ids + 1),"type" : "Aggregate", "agg_strat" : node.attrib["AggregationStrategy"], "grouping_cols" : gr_cols, "agg_cols" : agg_cols ,"id_a" : str(ids + 2)}
                 plan.insert(0, step)
                 pre[id + 2] = [gr_cols, agg_cols,[],]
                 extra[str(ids + 2)] = projs
@@ -325,8 +296,7 @@ gr_cols, "agg_cols" : agg_cols ,"id_a" : str(ids + 2)}
             elif name == "Sort":
                 id = q_ids.pop(0)
                 plan.insert(0, projection(node[1], id, ids + 1))
-                step = {"id" : str(ids + 1),"type" : "Sort", 
-"sorting_cols" : sorting_cols(node[3]) ,"id_a" : str(ids + 2)}
+                step = {"id" : str(ids + 1),"type" : "Sort", "sorting_cols" : sorting_cols(node[3]) ,"id_a" : str(ids + 2)}
                 plan.insert(0, step)
                 q.append(node[6])
                 q_ids.append(ids + 2)
@@ -353,9 +323,6 @@ for c in file2:
         end = i
     i += 1
 #stores the result in JSON
-with open("dxl_parser_result/"+ file2[last+1:end] + '.json', 'w', 
-encoding='utf-8') as f:
+with open("dxl_parser_result/"+ file2[last+1:end] + '.json', 'w', encoding='utf-8') as f:
     json.dump(result, f, ensure_ascii=False, indent=4)
-print("results written to: ./dxl_parser_result/" + file2[last+1:end] + 
-'.json')
-
+print("results written to: ./dxl_parser_result/" + file2[last+1:end] + '.json')
